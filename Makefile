@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-lSDL_image `sdl-config --cflags --libs`
-LDFLAGS=-lSDL_image `sdl-config --libs `
+LDFLAGS=-lSDL_image -lSDL_ttf `sdl-config --libs `
 EXEC=stetrisme
 SRC= $(wildcard *.c)
 OBJ= $(SRC:.c=.o)
