@@ -1,3 +1,8 @@
 *.o
 stetrisme
 ignored_resources
+Stetrisme.cpb
+Stetrisme.depend
+Stetrisme.layout
+bin
+cb.bmp
