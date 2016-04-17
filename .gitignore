@@ -1,7 +1,7 @@
 *.o
 stetrisme
 ignored_resources
-Stetrisme.cpb
+Stetrisme.cbp
 Stetrisme.depend
 Stetrisme.layout
 bin

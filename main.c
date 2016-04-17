@@ -3,12 +3,15 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+
+#include "constants.h"
 #include "play.h"
 
 void pause();
 
 int main(int argc, char *argv[])
 {
+      SDL_Color white_color  = {255, 255, 255};
       SDL_Init(SDL_INIT_EVERYTHING);
       SDL_Surface *screen = NULL, *tetrisHome = NULL, *title_text = NULL, *play_text = NULL, *configure_text = NULL;
       SDL_Event event;
@@ -27,12 +30,11 @@ int main(int argc, char *argv[])
           exit(EXIT_FAILURE);
       }
 
-      SDL_Color whiteColor = {255, 255, 255};
       font_title  = TTF_OpenFont("resources/opensans.ttf", 65);
       font_action = TTF_OpenFont("resources/opensans.ttf", 30);
-      title_text  = TTF_RenderText_Blended(font_title, "Stetrisme", whiteColor);
-      play_text   = TTF_RenderText_Blended(font_action, "Press ENTER to play", whiteColor);
-      configure_text = TTF_RenderText_Blended(font_action, "Press ESC to configure", whiteColor);
+      title_text  = TTF_RenderText_Blended(font_title, "Stetrisme", white_color);
+      play_text   = TTF_RenderText_Blended(font_action, "Press ENTER to play", white_color);
+      configure_text = TTF_RenderText_Blended(font_action, "Press ESC to configure", white_color);
 
       SDL_WM_SetCaption("Stetrisme", NULL);
       SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 17, 206, 112));
@@ -60,10 +62,12 @@ int main(int argc, char *argv[])
                         // configure(screen);
                         continuer = 0;
                         break;
+                    default:
+                    break;
                 }
                 break;
         }
-    
+
         position.x = 0;
         position.y = 0;
         SDL_BlitSurface(tetrisHome, NULL, screen, &position);
@@ -74,10 +78,10 @@ int main(int argc, char *argv[])
 
         position.x = 200;
         position.y = 200;
-        SDL_BlitSurface(play_text, NULL, screen, &position);  
+        SDL_BlitSurface(play_text, NULL, screen, &position);
 
         position.y = 300;
-        SDL_BlitSurface(configure_text, NULL, screen, &position);  
+        SDL_BlitSurface(configure_text, NULL, screen, &position);
 
         SDL_Flip(screen);
     }
