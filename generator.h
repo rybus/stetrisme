@@ -1,1 +1,1 @@
-int *get_next_tetrimino();
+void get_next_tetrimino(int tetrino[][4]);

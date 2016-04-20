@@ -5,6 +5,7 @@
 #include <SDL/SDL_ttf.h>
 
 #include "constants.h"
+#include "generator.h"
 #include "play.h"
 
 int score = 1;
@@ -32,7 +33,7 @@ int play(SDL_Surface *screen)
     black_block = IMG_Load("pictures/black_block.png");
     green_block = IMG_Load("pictures/green_block.png");
     red_block = IMG_Load("pictures/red_block.png");
-    block_types grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB + 3];
+    block_types grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
 
    init_game(grid);
 
@@ -60,10 +61,14 @@ int play(SDL_Surface *screen)
                             }
                         break;
                         case SDLK_RIGHT:
-                            // moveRight();
+                            if (isRightMovable(grid)) {
+                                moveRight(grid);
+                            }
                         break;
                         case SDLK_DOWN:
-                            // moveDown();
+                            if (isDownMovable(grid)) {
+                                moveDown(grid);
+                            }
                         break;
                         default:
                         break;
@@ -88,18 +93,34 @@ int play(SDL_Surface *screen)
     return EXIT_SUCCESS;
 }
 
-void init_game(block_types grid[][HEIGHT_BLOCK_NB + 3])
+void init_game(block_types grid[][HEIGHT_BLOCK_NB])
 {
     int x, y;
     for(x = 0; x < WIDTH_BLOCK_NB; x++) {
         for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
-             printf("x: %d, y: %d, nb block height: %d\n", x, y, HEIGHT_BLOCK_NB);
              grid[x][y] = EMPTY;
         }
     }
+    nextTetrino(grid);
 }
 
-void draw_game(SDL_Surface *screen, block_types grid[][HEIGHT_BLOCK_NB + 3])
+void nextTetrino(block_types grid[][HEIGHT_BLOCK_NB])
+{
+    int tetrino[4][4];
+    int x, y;
+    get_next_tetrimino(tetrino);
+
+    for(x = (WIDTH_BLOCK_NB/2); x < (WIDTH_BLOCK_NB/2)+4; x++) {
+        for (y = 0; y < 4; y++) {
+          if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 1) {
+                grid[x][y] = CURRENT;
+          }
+        }
+    }
+
+}
+
+void draw_game(SDL_Surface *screen, block_types grid[][HEIGHT_BLOCK_NB])
 {
     int x, y;
     SDL_Rect position;
@@ -120,16 +141,18 @@ void draw_game(SDL_Surface *screen, block_types grid[][HEIGHT_BLOCK_NB + 3])
     }
 }
 
-int isLeftMovable(block_types grid[][HEIGHT_BLOCK_NB +3])
+int isLeftMovable(block_types grid[][HEIGHT_BLOCK_NB])
 {
     int x, y;
 
     for(x = 0; x < WIDTH_BLOCK_NB; x++) {
-        for (y = 0; x < HEIGHT_BLOCK_NB; y++) {
+        for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
             if (grid[x][y] == CURRENT) {
                 if (x - 1 < 0) {
+
                     return 0;
                 } else if (grid[x - 1][y] == BLOCK) {
+
                     return 0;
                 }
             }
@@ -139,12 +162,68 @@ int isLeftMovable(block_types grid[][HEIGHT_BLOCK_NB +3])
     return 1;
 }
 
-void moveLeft(block_types grid[][HEIGHT_BLOCK_NB +3])
+int isRightMovable(block_types grid[][HEIGHT_BLOCK_NB])
 {
     int x, y;
 
     for(x = 0; x < WIDTH_BLOCK_NB; x++) {
-        for (y = 0; x < HEIGHT_BLOCK_NB; y++) {
+        for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
+           if (grid[x][y] == CURRENT) {
+                if (x + 1 > WIDTH_BLOCK_NB) {
+
+                    return 0;
+                } else if (grid[x + 1][y] == BLOCK) {
+
+                    return 0;
+                }
+            }
+        }
+    }
+
+    return 1;
+}
+
+int isDownMovable(block_types grid[][HEIGHT_BLOCK_NB])
+{
+    int x, y;
+
+    for(x = 0; x < WIDTH_BLOCK_NB; x++) {
+        for (y = 0; y < HEIGHT_BLOCK_NB - 1; y++) {
+           if (grid[x][y] == CURRENT) {
+                if (y + 1 > HEIGHT_BLOCK_NB) {
+
+                    return 0;
+                } else if (grid[x][y + 1] == BLOCK) {
+
+                    return 0;
+                }
+            }
+        }
+    }
+
+    return 1;
+}
+
+void moveDown(block_types grid[][HEIGHT_BLOCK_NB])
+{
+    int x, y;
+
+    for(x = 0; x < WIDTH_BLOCK_NB; x++) {
+        for (y = HEIGHT_BLOCK_NB - 1; y > 0; y--) {
+            if (grid[x][y] == CURRENT) {
+                grid[x][y + 1] = CURRENT;
+                grid[x][y] = EMPTY;
+            }
+        }
+    }
+}
+
+void moveLeft(block_types grid[][HEIGHT_BLOCK_NB])
+{
+    int x, y;
+
+    for(x = 0; x < WIDTH_BLOCK_NB; x++) {
+        for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
             if (grid[x][y] == CURRENT) {
                 grid[x - 1][y] = CURRENT;
                 grid[x][y] = EMPTY;
@@ -153,6 +232,19 @@ void moveLeft(block_types grid[][HEIGHT_BLOCK_NB +3])
     }
 }
 
+void moveRight(block_types grid[][HEIGHT_BLOCK_NB])
+{
+    int x, y;
+
+    for(x = WIDTH_BLOCK_NB - 1; x > 0 ; x--) {
+        for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
+            if (grid[x][y] == CURRENT) {
+                grid[x + 1][y] = CURRENT;
+                grid[x][y] = EMPTY;
+            }
+        }
+    }
+}
 
 /*
 * Draws game set
@@ -192,8 +284,6 @@ void print_integer_informations(SDL_Surface *screen, char *label, int number, SD
     SDL_Surface *label_surface  = NULL;
     SDL_Surface *number_surface = NULL;
     char number_text[10];
-
-    sprintf(number_text, "%d", number);
 
     label_surface  = TTF_RenderText_Blended(label_font, label, white_color);
     SDL_BlitSurface(label_surface, NULL, screen, position);
