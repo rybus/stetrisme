@@ -23,7 +23,7 @@ int isDownMovable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLO
     return 1;
 }
 
-void moveDown(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB])
+int moveDown(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
 {
     int x, y;
     if (isDownMovable(current_grid, grid)) {
@@ -36,8 +36,10 @@ void moveDown(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_N
                 }
             }
         }
+
+        return 1;
     } else {
-        nextTetrino(current_grid, grid);
+        return nextTetrino(current_grid, grid, score);
     }
 }
 

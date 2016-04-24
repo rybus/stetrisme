@@ -11,7 +11,6 @@ void rotateClockWise(block grid[][HEIGHT_BLOCK_NB], block current_grid[][HEIGHT_
     int min_y = HEIGHT_BLOCK_NB, max_y = 0;
 
     getMatrixDimensions(current_grid, &min_x, &max_x, &min_y, &max_y);
-
     if (isClockWiseRotatable(current_grid, grid, min_x, max_x, min_y, max_y)) {
         rotateBlockClockWise(current_grid, min_x, max_x, min_y, max_y);
     }
@@ -29,9 +28,9 @@ int isClockWiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEI
 
     rotateBlockClockWise(fake_grid, min_x, max_x, min_y, max_y);
 
-    for (int i = 0; i < WIDTH_BLOCK_NB; ++i) {
-        for (int j = 0; j < HEIGHT_BLOCK_NB; ++j) {
-            if(fake_grid[i][j] == CURRENT && grid[i][j] == BLOCK) {
+    for (int y = min_y; y <= max_y; y++) {
+        for (int x = min_x; x <= max_x; x++) {
+            if(fake_grid[x][y] == CURRENT && grid[x][y] == BLOCK) {
                 return 0;
             }
         }
@@ -58,9 +57,9 @@ int isCounterClockwiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block gri
     memcpy(fake_grid, current_grid, sizeof(fake_grid));
 
     rotateBlockCounterClockWise(fake_grid, min_x, max_x, min_y, max_y);
-    for (int i = 0; i < WIDTH_BLOCK_NB; ++i) {
-        for (int j = 0; j < HEIGHT_BLOCK_NB; ++j) {
-            if(fake_grid[i][j] == CURRENT && grid[i][j] == BLOCK) {
+    for (int y = min_y; y <= max_y; y++) {
+        for (int x = min_x; x <= max_x; x++) {
+            if(fake_grid[x][y] == CURRENT && grid[x][y] == BLOCK) {
                 return 0;
             }
         }

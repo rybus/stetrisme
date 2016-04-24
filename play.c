@@ -10,7 +10,7 @@
 #include "block_rotations.h"
 #include "play.h"
 
-int score = 1;
+int score;
 int level = 1;
 int keepPlaying = 1;
 int max_score   = 9999;
@@ -59,9 +59,6 @@ int play(SDL_Surface *screen)
                         case SDLK_RETURN:
                             keepPlaying = 0;
                         break;
-                        case SDLK_F1:
-                            score++;
-                        break;
                         case SDLK_LEFT:
                             moveLeft(current_grid, grid);
                         break;
@@ -69,7 +66,9 @@ int play(SDL_Surface *screen)
                             moveRight(current_grid, grid);
                         break;
                         case SDLK_DOWN:
-                            moveDown(current_grid, grid);
+                            if(moveDown(current_grid, grid, &score) == 0) {
+                                keepPlaying = 0;
+                            }
                         break;
                         case SDLK_q:
                             rotateCounterClockWise(grid, current_grid);
@@ -87,7 +86,7 @@ int play(SDL_Surface *screen)
         currentTime = SDL_GetTicks();
         if (currentTime - previousTime > 500)
         {
-            moveDown(current_grid, grid);
+            moveDown(current_grid, grid, &score);
             previousTime = currentTime;
         }
 
@@ -105,10 +104,13 @@ void init_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_
     for(x = 0; x < WIDTH_BLOCK_NB; x++) {
         for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
              grid[x][y] = EMPTY;
+             if (y == (HEIGHT_BLOCK_NB - 1) && x != 3) {
+                  grid[x][y] = BLOCK;
+             }
              current_grid[x][y] = EMPTY;
         }
     }
-    nextTetrino(current_grid, grid);
+    nextTetrino(current_grid, grid, 0);
 }
 
 
@@ -128,7 +130,7 @@ void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block
             } else if (current_grid[x][y] == CURRENT) {
                 SDL_BlitSurface(green_block, NULL, screen, &position);
             } else if (current_grid[x][y] == MATRIX_FILL) {
-                SDL_BlitSurface(purple_block, NULL, screen, &position);
+                //  SDL_BlitSurface(purple_block, NULL, screen, &position);
             } else {
                 SDL_BlitSurface(black_block, NULL, screen, &position);
             }
@@ -175,6 +177,7 @@ void print_integer_informations(SDL_Surface *screen, char *label, int number, SD
     SDL_Surface *label_surface  = NULL;
     SDL_Surface *number_surface = NULL;
     char number_text[10];
+    sprintf(number_text, "%d", number);
 
     label_surface  = TTF_RenderText_Blended(label_font, label, white_color);
     SDL_BlitSurface(label_surface, NULL, screen, position);
