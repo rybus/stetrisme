@@ -4,8 +4,3 @@ void print_integer_informations(SDL_Surface *screen, char *label, int number, SD
 void erase_surface(SDL_Surface *screen);
 void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB]);
 void init_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB]);
-void rotateClockwise(block grid[][HEIGHT_BLOCK_NB], block current_grid[][HEIGHT_BLOCK_NB]);
-void rotateCounterClockwise(block grid[][HEIGHT_BLOCK_NB]);
-void getMatrixDimensions(block grid[][HEIGHT_BLOCK_NB], int *min_x, int *max_x, int *min_y, int *max_y);
-int isClockWiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y);
-void rotateBlockClockWise(block current_grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y);

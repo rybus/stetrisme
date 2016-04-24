@@ -45,6 +45,7 @@ void get_next_tetrimino(int tetrino[][4])
 
     srand(time(NULL));
     int tetrimino_number = rand() % 7;
+
     int i, j;
 
     for (i = 0; i < 4; i++) {

@@ -38,6 +38,7 @@ int play(SDL_Surface *screen)
     purple_block = IMG_Load("pictures/purple_block.png");
     red_block = IMG_Load("pictures/red_block.png");
     blue_block = IMG_Load("pictures/blue_block.png");
+
     block grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
     block current_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
 
@@ -71,10 +72,10 @@ int play(SDL_Surface *screen)
                             moveDown(current_grid, grid);
                         break;
                         case SDLK_q:
-                            // rotateCounterClockwise(grid);
+                            rotateCounterClockWise(grid, current_grid);
                         break;
                         case SDLK_s:
-                             rotateClockwise(grid, current_grid);
+                            rotateClockWise(grid, current_grid);
                         break;
                         default:
                         break;
@@ -86,7 +87,7 @@ int play(SDL_Surface *screen)
         currentTime = SDL_GetTicks();
         if (currentTime - previousTime > 500)
         {
-           // moveDown(grid);
+            moveDown(current_grid, grid);
             previousTime = currentTime;
         }
 

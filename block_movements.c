@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "constants.h"
-#include "generator.h"
+#include "block_creations.h"
 
 int isDownMovable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB])
 {
