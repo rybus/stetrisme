@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "constants.h"
+#include "score.h"
 #include "block_creations.h"
 
 void get_next_tetrimino(int tetrino[][4])
@@ -100,6 +101,8 @@ void removeFullLines(block grid[][HEIGHT_BLOCK_NB], int * score)
           *score = *score + 10;
       }
   }
+
+  update_high_score(*score);
 }
 
 int isLineFull(block grid[][HEIGHT_BLOCK_NB], int line_number)

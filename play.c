@@ -7,6 +7,7 @@
 #include <errno.h>
 
 #include "constants.h"
+#include "score.h"
 #include "block_creations.h"
 #include "block_movements.h"
 #include "block_rotations.h"
@@ -15,7 +16,7 @@
 int score;
 int level = 1;
 int keepPlaying = 1;
-int max_score   = 9999;
+int high_score   = 9999;
 int previousTime = 0;
 int currentTime  = 0;
 
@@ -44,7 +45,10 @@ int play(SDL_Surface *screen)
     block grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
     block current_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
 
-   init_game(current_grid, grid, &score);
+    score = 0;
+    high_score = load_high_score();
+
+    init_game(current_grid, grid, &score);
 
     while (keepPlaying)
     {
@@ -92,7 +96,7 @@ int play(SDL_Surface *screen)
             previousTime = currentTime;
         }
 
-        draw_game_set(screen, score, level, max_score);
+        draw_game_set(screen, score, level, high_score);
         draw_game(screen, current_grid, grid);
         SDL_Flip(screen);
     }
@@ -112,21 +116,8 @@ void init_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_
              current_grid[x][y] = EMPTY;
         }
     }
-    * score = load_score();
+
     nextTetrino(current_grid, grid, score);
-}
-
-int load_score()
-{
-    int score = -1;
-    FILE *score_file = fopen("./high_score.txt", "r");
-
-   if (score_file) {
-       fscanf (score_file, "%d", &score);
-       fclose(score_file);
-    }
-
-   return score;
 }
 
 void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB])
@@ -158,9 +149,9 @@ void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block
 *
 * @param int score     current score
 * @param int level     current level
-* @param int max_score max score. ever
+* @param int high_score high score ever
 */
-void draw_game_set(SDL_Surface *screen, int score, int level, int max_score)
+void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
 {
     SDL_Rect position;
     char score_label_text[6]          = "score";
@@ -174,7 +165,7 @@ void draw_game_set(SDL_Surface *screen, int score, int level, int max_score)
     print_integer_informations(screen, score_label_text, score, &position);
 
     position.y = position.y + 80;
-    print_integer_informations(screen, maximum_score_label_text, max_score, &position);
+    print_integer_informations(screen, maximum_score_label_text, high_score, &position);
     position.y = position.y + 80;
     print_integer_informations(screen, current_level_label_text, level, &position);
 }
