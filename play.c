@@ -3,6 +3,8 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include <string.h>
+#include <errno.h>
 
 #include "constants.h"
 #include "block_creations.h"
@@ -42,7 +44,7 @@ int play(SDL_Surface *screen)
     block grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
     block current_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
 
-   init_game(current_grid, grid);
+   init_game(current_grid, grid, &score);
 
     while (keepPlaying)
     {
@@ -98,7 +100,7 @@ int play(SDL_Surface *screen)
     return EXIT_SUCCESS;
 }
 
-void init_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB])
+void init_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
 {
     int x, y;
     for(x = 0; x < WIDTH_BLOCK_NB; x++) {
@@ -110,10 +112,22 @@ void init_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_
              current_grid[x][y] = EMPTY;
         }
     }
-    nextTetrino(current_grid, grid, 0);
+    * score = load_score();
+    nextTetrino(current_grid, grid, score);
 }
 
+int load_score()
+{
+    int score = -1;
+    FILE *score_file = fopen("./high_score.txt", "r");
 
+   if (score_file) {
+       fscanf (score_file, "%d", &score);
+       fclose(score_file);
+    }
+
+   return score;
+}
 
 void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB])
 {
