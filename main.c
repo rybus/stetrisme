@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include <stdint.h>
 
 #include "constants.h"
 #include "play.h"
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
       SDL_Rect position;
       TTF_Font *font_title = NULL, *font_action;
 
-      screen = SDL_SetVideoMode(640, 800, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+      screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
       if (screen == NULL) {
          fprintf(stderr, "Unable to enable video mode : %s\n", SDL_GetError());
          exit(EXIT_FAILURE);
@@ -92,4 +93,3 @@ int main(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 }
-  

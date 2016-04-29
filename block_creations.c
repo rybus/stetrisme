@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdint.h>
 
 #include "constants.h"
 #include "score.h"

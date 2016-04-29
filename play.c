@@ -14,7 +14,7 @@
 #include "play.h"
 
 int score;
-int level = 1;
+int level = 2;
 int keepPlaying = 1;
 int high_score   = 9999;
 int previousTime = 0;
@@ -82,8 +82,6 @@ int play(SDL_Surface *screen)
                         case SDLK_s:
                             rotateClockWise(grid, current_grid);
                         break;
-                        default:
-                        break;
                     }
                 break;
             }
@@ -127,13 +125,13 @@ void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block
 
     for(x = 0; x < WIDTH_BLOCK_NB; x++) {
         for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
-            position.x = x * BLOCK_SIZE;
-            position.y = y * BLOCK_SIZE;
+            position.x = x * BLOCK_SIZE + 2;
+            position.y = y * BLOCK_SIZE + 2;
 
             if(grid[x][y] == BLOCK) {
                 SDL_BlitSurface(red_block, NULL, screen, &position);
             } else if (current_grid[x][y] == CURRENT) {
-                SDL_BlitSurface(green_block, NULL, screen, &position);
+                SDL_BlitSurface(blue_block, NULL, screen, &position);
             } else if (current_grid[x][y] == MATRIX_FILL) {
                 //  SDL_BlitSurface(purple_block, NULL, screen, &position);
             } else {
@@ -159,6 +157,7 @@ void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
     char current_level_label_text[6]  = "level";
 
     erase_surface(screen);
+    drawGameBorders(screen);
 
     position.x = 450;
     position.y = 200;
@@ -168,6 +167,37 @@ void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
     print_integer_informations(screen, maximum_score_label_text, high_score, &position);
     position.y = position.y + 80;
     print_integer_informations(screen, current_level_label_text, level, &position);
+}
+
+void drawGameBorders(SDL_Surface *screen)
+{
+  pixel pixel_white;
+  pixel_white.r = (Uint8)0xff;
+  pixel_white.g = (Uint8)0xff;
+  pixel_white.b = (Uint8)0xff;
+  pixel_white.alpha = (Uint8)128;
+
+  SDL_LockSurface(screen);
+
+  for (int i = 0; i < 800; i++) {
+    put_pixel(screen, 0, i, &pixel_white);
+    put_pixel(screen, 1, i, &pixel_white);
+    put_pixel(screen, 441, i, &pixel_white);
+    put_pixel(screen, 442, i, &pixel_white);
+  }
+  for (int i = 0; i < 441; i++) {
+    put_pixel(screen, i, 799, &pixel_white);
+      put_pixel(screen, i, 798, &pixel_white);
+  }
+
+  SDL_UnlockSurface(screen);
+}
+
+void put_pixel(SDL_Surface* screen, int x, int y,pixel* p)
+{
+    Uint32* p_screen = (Uint32*) screen->pixels;
+    p_screen += y*screen->w+x;
+    *p_screen = SDL_MapRGBA(screen->format, p->r, p->g, p->b, p->alpha);
 }
 
 /*
