@@ -13,57 +13,54 @@
 #include "block_rotations.h"
 #include "play.h"
 
-int score;
+int score = 0;
 int level = 2;
-int keepPlaying = 1;
-int high_score   = 9999;
-int previousTime = 0;
-int currentTime  = 0;
+int keep_playing = 1;
+int high_score = 9999;
+int current_time  = 0;
+int previous_time = 0;
 
 SDL_Event playEvent;
 SDL_Surface *play_surface = NULL;
 TTF_Font *label_font   = NULL;
 TTF_Font *regular_font = NULL;
-SDL_Surface *green_block = NULL;
 SDL_Surface *red_block = NULL;
 SDL_Surface *black_block = NULL;
 SDL_Surface *purple_block = NULL;
 SDL_Surface *blue_block = NULL;
 SDL_Color white_color  = {255, 255, 255};
 SDL_Color fushia_color = {0, 152, 247};
+block grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
+block current_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
 
 int play(SDL_Surface *screen)
 {
 	regular_font = TTF_OpenFont("resources/opensans.ttf", 20);
 	label_font = TTF_OpenFont("resources/opensans.ttf", 30);
 	black_block = IMG_Load("pictures/black_block.png");
-	green_block = IMG_Load("pictures/green_block.png");
 	purple_block = IMG_Load("pictures/purple_block.png");
 	red_block = IMG_Load("pictures/red_block.png");
 	blue_block = IMG_Load("pictures/blue_block.png");
 
-	block grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
-	block current_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
-
 	score = 0;
 	high_score = load_high_score();
 
-	init_game(current_grid, grid, &score);
+	initialize_game(current_grid, grid, &score);
 
-	while (keepPlaying)
+	while (keep_playing)
 	{
 		while(SDL_PollEvent(&playEvent))
 		{
 			switch(playEvent.type)
 			{
 			case SDL_QUIT:
-				keepPlaying = 0;
+				keep_playing = 0;
 				break;
 			case SDL_KEYDOWN:
 				switch(playEvent.key.keysym.sym)
 				{
 				case SDLK_RETURN:
-					keepPlaying = 0;
+					keep_playing = 0;
 					break;
 				case SDLK_LEFT:
 					moveLeft(current_grid, grid);
@@ -73,7 +70,7 @@ int play(SDL_Surface *screen)
 					break;
 				case SDLK_DOWN:
 					if(moveDown(current_grid, grid, &score) == 0) {
-						keepPlaying = 0;
+						keep_playing = 0;
 					}
 					break;
 				case SDLK_q:
@@ -89,11 +86,11 @@ int play(SDL_Surface *screen)
 			}
 		}
 
-		currentTime = SDL_GetTicks();
-		if (currentTime - previousTime > 500)
+		current_time = SDL_GetTicks();
+		if (current_time - previous_time > 500)
 		{
 			moveDown(current_grid, grid, &score);
-			previousTime = currentTime;
+			previous_time = current_time;
 		}
 
 		draw_game_set(screen, score, level, high_score);
@@ -104,15 +101,12 @@ int play(SDL_Surface *screen)
 	return EXIT_SUCCESS;
 }
 
-void init_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
+void initialize_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
 {
 	int x, y;
 	for(x = 0; x < WIDTH_BLOCK_NB; x++) {
 		for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
 			grid[x][y] = EMPTY;
-			if (y == (HEIGHT_BLOCK_NB - 1) && x != 3) {
-				grid[x][y] = BLOCK;
-			}
 			current_grid[x][y] = EMPTY;
 		}
 	}
@@ -127,8 +121,8 @@ void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block
 
 	for(x = 0; x < WIDTH_BLOCK_NB; x++) {
 		for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
-			position.x = x * BLOCK_SIZE + 2;
-			position.y = y * BLOCK_SIZE + 2;
+			position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
+			position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
 			if(grid[x][y] == BLOCK) {
 				SDL_BlitSurface(red_block, NULL, screen, &position);
@@ -159,9 +153,9 @@ void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
 	char current_level_label_text[6]  = "level";
 
 	erase_surface(screen);
-	drawGameBorders(screen);
+	draw_game_borders(screen);
 
-	position.x = 450;
+	position.x = BLOCK_SIZE * WIDTH_BLOCK_NB + GAME_BORDER_WIDTH * 2 + 20;
 	position.y = 200;
 	print_integer_informations(screen, score_label_text, score, &position);
 
@@ -171,25 +165,29 @@ void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
 	print_integer_informations(screen, current_level_label_text, level, &position);
 }
 
-void drawGameBorders(SDL_Surface *screen)
+void draw_game_borders(SDL_Surface *screen)
 {
 	pixel pixel_white;
-	pixel_white.r = (Uint8)0xff;
-	pixel_white.g = (Uint8)0xff;
-	pixel_white.b = (Uint8)0xff;
-	pixel_white.alpha = (Uint8)128;
+	pixel_white.r = (Uint8) 0xff;
+	pixel_white.g = (Uint8) 0xff;
+	pixel_white.b = (Uint8) 0xff;
+	pixel_white.alpha = (Uint8) 128;
 
 	SDL_LockSurface(screen);
 
-	for (int i = 0; i < 800; i++) {
-		put_pixel(screen, 0, i, &pixel_white);
-		put_pixel(screen, 1, i, &pixel_white);
-		put_pixel(screen, 441, i, &pixel_white);
-		put_pixel(screen, 442, i, &pixel_white);
-	}
-	for (int i = 0; i < 441; i++) {
-		put_pixel(screen, i, 799, &pixel_white);
-		put_pixel(screen, i, 798, &pixel_white);
+	for (int i = 0; i < WINDOW_HEIGHT; i++) {
+		for (int j = 0; j < WINDOW_WIDTH; j++) {
+			if (i < GAME_BORDER_WIDTH && j < BLOCK_SIZE * WIDTH_BLOCK_NB + GAME_BORDER_WIDTH) {
+				put_pixel(screen, j, i, &pixel_white);
+			}
+			if (i > BLOCK_SIZE * HEIGHT_BLOCK_NB - GAME_BORDER_WIDTH && j < BLOCK_SIZE * WIDTH_BLOCK_NB + GAME_BORDER_WIDTH) {
+				put_pixel(screen, j, i, &pixel_white);
+			}
+			if (j < GAME_BORDER_WIDTH) {
+				put_pixel(screen, 0 + j, i, &pixel_white);
+				put_pixel(screen, BLOCK_SIZE * WIDTH_BLOCK_NB + GAME_BORDER_WIDTH + j, i, &pixel_white);
+			}
+		}
 	}
 
 	SDL_UnlockSurface(screen);

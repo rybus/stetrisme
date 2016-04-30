@@ -5,11 +5,12 @@
  */
 #ifndef DEF_CONSTANTS
 #define DEF_CONSTANTS
-    #define BLOCK_SIZE      23
+    #define BLOCK_SIZE      25
     #define WIDTH_BLOCK_NB   19
     #define HEIGHT_BLOCK_NB  34
-    #define WINDOW_WIDTH     640
-    #define WINDOW_HEIGHT    800
+    #define GAME_BORDER_WIDTH 2
+    #define WINDOW_WIDTH     BLOCK_SIZE * WIDTH_BLOCK_NB + GAME_BORDER_WIDTH * 2 + 200
+    #define WINDOW_HEIGHT    BLOCK_SIZE * HEIGHT_BLOCK_NB + GAME_BORDER_WIDTH * 2
 
 typedef enum {EMPTY = 0, BLOCK = 1, CURRENT = 2, MATRIX_FILL = 3} block;
 typedef struct {

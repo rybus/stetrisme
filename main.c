@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 	configure_text = TTF_RenderText_Blended(font_action, "Press ESC to configure", white_color);
 
 	SDL_WM_SetCaption("Stetrisme", NULL);
-	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 17, 206, 112));
+	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
 
 	tetrisHome = IMG_Load("pictures/tetris.png");
