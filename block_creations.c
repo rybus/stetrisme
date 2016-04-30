@@ -9,123 +9,123 @@
 
 void get_next_tetrimino(int tetrino[][4])
 {
-    int tetrimino[7][4][4] = {
-                                {{2, 2, 2, 2},
-                                 {1, 1, 1, 1},
-                                 {2, 2, 2, 2},
-                                 {2, 2, 2, 2}},
+	int tetrimino[7][4][4] = {
+		{{2, 2, 2, 2},
+		 {1, 1, 1, 1},
+		 {2, 2, 2, 2},
+		 {2, 2, 2, 2}},
 
-                                {{2, 1, 1, 0},
-                                 {2, 1, 1, 0},
-                                 {2, 2, 2, 0},
-                                 {0, 0, 0, 0}},
+		{{2, 1, 1, 0},
+		 {2, 1, 1, 0},
+		 {2, 2, 2, 0},
+		 {0, 0, 0, 0}},
 
-                                {{2, 1, 2, 0},
-                                 {1, 1, 1, 0},
-                                 {2, 2, 2, 0},
-                                 {0, 0, 0, 0}},
+		{{2, 1, 2, 0},
+		 {1, 1, 1, 0},
+		 {2, 2, 2, 0},
+		 {0, 0, 0, 0}},
 
-                                {{2, 2, 1, 0},
-                                 {1, 1, 1, 0},
-                                 {2, 2, 2, 0},
-                                 {0, 0, 0, 0}},
+		{{2, 2, 1, 0},
+		 {1, 1, 1, 0},
+		 {2, 2, 2, 0},
+		 {0, 0, 0, 0}},
 
-                                {{1, 2, 2, 0},
-                                 {1, 1, 1, 0},
-                                 {2, 2, 2, 0},
-                                 {0, 0, 0, 0}},
+		{{1, 2, 2, 0},
+		 {1, 1, 1, 0},
+		 {2, 2, 2, 0},
+		 {0, 0, 0, 0}},
 
-                                {{1, 1, 2, 0},
-                                 {2, 1, 1, 0},
-                                 {2, 2, 2, 0},
-                                 {0, 0, 0, 0}},
+		{{1, 1, 2, 0},
+		 {2, 1, 1, 0},
+		 {2, 2, 2, 0},
+		 {0, 0, 0, 0}},
 
-                                {{2, 1, 1, 0},
-                                 {1, 1, 2, 0},
-                                 {2, 2, 2, 0},
-                                 {0, 0, 0, 0}}
-                             };
+		{{2, 1, 1, 0},
+		 {1, 1, 2, 0},
+		 {2, 2, 2, 0},
+		 {0, 0, 0, 0}}
+	};
 
-    srand(time(NULL));
-    int tetrimino_number = rand() % 7;
+	srand(time(NULL));
+	int tetrimino_number = rand() % 7;
 
-    int i, j;
+	int i, j;
 
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
-            tetrino[i][j] = tetrimino[tetrimino_number][i][j];
-        }
-    }
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			tetrino[i][j] = tetrimino[tetrimino_number][i][j];
+		}
+	}
 }
 
 int nextTetrino(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
 {
-    int tetrino[4][4];
-    int x, y;
-    for(x = 0; x < WIDTH_BLOCK_NB; x++) {
-        for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
-             if (current_grid[x][y] == CURRENT) {
-                grid[x][y] = BLOCK;
-             }
-             current_grid[x][y] = EMPTY;
-        }
-    }
+	int tetrino[4][4];
+	int x, y;
+	for(x = 0; x < WIDTH_BLOCK_NB; x++) {
+		for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
+			if (current_grid[x][y] == CURRENT) {
+				grid[x][y] = BLOCK;
+			}
+			current_grid[x][y] = EMPTY;
+		}
+	}
 
-    removeFullLines(grid, score);
+	removeFullLines(grid, score);
 
-    get_next_tetrimino(tetrino);
+	get_next_tetrimino(tetrino);
 
-    for(x = (WIDTH_BLOCK_NB/2); x < (WIDTH_BLOCK_NB/2)+4; x++) {
-        for (y = 0; y < 4; y++) {
-          if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 1 && grid[x][y] == BLOCK) {
-                return 0;
-          }
-          if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 1) {
-                current_grid[x][y] = CURRENT;
-          }
-          if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 2) {
-                current_grid[x][y] = MATRIX_FILL;
-          }
-        }
-    }
+	for(x = (WIDTH_BLOCK_NB/2); x < (WIDTH_BLOCK_NB/2)+4; x++) {
+		for (y = 0; y < 4; y++) {
+			if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 1 && grid[x][y] == BLOCK) {
+				return 0;
+			}
+			if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 1) {
+				current_grid[x][y] = CURRENT;
+			}
+			if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 2) {
+				current_grid[x][y] = MATRIX_FILL;
+			}
+		}
+	}
 
-    return 1;
+	return 1;
 }
 
 void removeFullLines(block grid[][HEIGHT_BLOCK_NB], int * score)
 {
-  int x, y;
+	int x, y;
 
-  for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
-      if (isLineFull(grid, y)) {
-          shiftGrid(grid, y);
-          *score = *score + 10;
-      }
-  }
+	for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
+		if (isLineFull(grid, y)) {
+			shiftGrid(grid, y);
+			*score = *score + 10;
+		}
+	}
 
-  update_high_score(*score);
+	update_high_score(*score);
 }
 
 int isLineFull(block grid[][HEIGHT_BLOCK_NB], int line_number)
 {
-    for(int x = 0; x < WIDTH_BLOCK_NB; x++) {
-        if (grid[x][line_number] == EMPTY) {
-            return 0;
-        }
-    }
+	for(int x = 0; x < WIDTH_BLOCK_NB; x++) {
+		if (grid[x][line_number] == EMPTY) {
+			return 0;
+		}
+	}
 
-    return 1;
+	return 1;
 }
 
 void shiftGrid(block grid[][HEIGHT_BLOCK_NB], int line_number)
 {
-    for (int y = line_number; y >= 0; y--) {
-      for(int x = 0; x < WIDTH_BLOCK_NB; x++) {
-          if (y == 0) {
-              grid[x][0] = EMPTY;
-          } else {
-              grid[x][y] = grid[x][y - 1];
-          }
-      }
-  }
+	for (int y = line_number; y >= 0; y--) {
+		for(int x = 0; x < WIDTH_BLOCK_NB; x++) {
+			if (y == 0) {
+				grid[x][0] = EMPTY;
+			} else {
+				grid[x][y] = grid[x][y - 1];
+			}
+		}
+	}
 }
