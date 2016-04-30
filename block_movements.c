@@ -44,6 +44,24 @@ int moveDown(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB
     }
 }
 
+int moveFullDown(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
+{
+  int x, y;
+  while (isDownMovable(current_grid, grid)) {
+      for(x = 0; x < WIDTH_BLOCK_NB; x++) {
+          for (y = HEIGHT_BLOCK_NB - 1; y >= 0; y--)
+          {
+              if (current_grid[x][y] != EMPTY) {
+                  current_grid[x][y + 1] = current_grid[x][y];
+                  current_grid[x][y] = EMPTY;
+              }
+          }
+      }
+  }
+
+  return nextTetrino(current_grid, grid, score);
+}
+
 int isLeftMovable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB])
 {
     int x, y;

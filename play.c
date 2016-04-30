@@ -79,6 +79,8 @@ int play(SDL_Surface *screen)
                         case SDLK_q:
                             rotateCounterClockWise(grid, current_grid);
                         break;
+                        case SDLK_SPACE:
+                            moveFullDown(current_grid, grid, &score);
                         case SDLK_s:
                             rotateClockWise(grid, current_grid);
                         break;
