@@ -8,8 +8,6 @@
 #include "constants.h"
 #include "play.h"
 
-void pause();
-
 int main(int argc, char *argv[])
 {
 	SDL_Color white_color  = {255, 255, 255};
