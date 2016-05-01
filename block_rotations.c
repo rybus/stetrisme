@@ -27,7 +27,9 @@ int isClockWiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEI
 		}
 	}
 
-	rotateBlockClockWise(fake_grid, min_x, max_x, min_y, max_y);
+	if (0 == rotateBlockClockWise(fake_grid, min_x, max_x, min_y, max_y)) {
+		return 0;
+	}
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
@@ -71,19 +73,36 @@ int isCounterClockwiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block gri
 
 int rotateBlockClockWise(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	transpose(grid, min_x, max_x, min_y, max_y);
-	reverseColumns(grid, min_x, max_x, min_y, max_y);
+	if (1 == transpose(grid, min_x, max_x, min_y, max_y)) {
+		reverseColumns(grid, min_x, max_x, min_y, max_y);
+
+		return 1;
+	}
+	return 0;
 }
 
 int rotateBlockCounterClockWise(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	transpose(grid, min_x, max_x, min_y, max_y);
-	reverseRows(grid, min_x, max_x, min_y, max_y);
+	if (1 == transpose(grid, min_x, max_x, min_y, max_y)) {
+		reverseRows(grid, min_x, max_x, min_y, max_y);
+
+		return 1;
+	}
+	return 0;
 }
 
 int transpose(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
 	int dimension = (max_x - min_x) + 1;
+
+	if (min_x - dimension < 0) {
+			printf("Min_x: %d, dimension: %d\n", min_x, dimension);
+			return 0;
+	}
+	if ((max_x + dimension)/2 > WIDTH_BLOCK_NB) {
+		printf("Max_x: %d, dimension: %d\n", max_x, dimension);
+		return 0;
+	}
 
 	block **transposed;
 	transposed = (block ** ) malloc (dimension * sizeof (block*));
@@ -103,6 +122,7 @@ int transpose(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, in
 		}
 	}
 
+	return 1;
 }
 
 
