@@ -40,8 +40,7 @@ int main(int argc, char *argv[])
 	SDL_WM_SetCaption("Stetrisme", NULL);
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
-
-	tetrisHome = IMG_Load("pictures/tetris.png");
+	tetrisHome = IMG_Load("resources/pictures/tetris.png");
 	SDL_BlitSurface(tetrisHome, NULL, screen, &position);
 
 	while (continuer)
