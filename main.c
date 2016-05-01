@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
 	SDL_Color white_color  = {255, 255, 255};
 	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_Surface *screen = NULL, *tetrisHome = NULL, *title_text = NULL, *play_text = NULL, *configure_text = NULL;
+	SDL_Surface *screen = NULL, *tetrisHome = NULL, *title_text = NULL, *play_text = NULL;
 	SDL_Event event;
 	int continuer = 1;
 	SDL_Rect position;
@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
 	font_action = TTF_OpenFont("resources/opensans.ttf", 30);
 	title_text  = TTF_RenderText_Blended(font_title, "Stetrisme", white_color);
 	play_text   = TTF_RenderText_Blended(font_action, "Press ENTER to play", white_color);
-	configure_text = TTF_RenderText_Blended(font_action, "Press ESC to configure", white_color);
 
 	SDL_WM_SetCaption("Stetrisme", NULL);
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
@@ -58,10 +57,6 @@ int main(int argc, char *argv[])
 				play(screen);
 				continuer = 0;
 				break;
-			case SDLK_ESCAPE:
-				// configure(screen);
-				continuer = 0;
-				break;
 			default:
 				break;
 			}
@@ -79,9 +74,6 @@ int main(int argc, char *argv[])
 		position.x = 200;
 		position.y = 200;
 		SDL_BlitSurface(play_text, NULL, screen, &position);
-
-		position.y = 300;
-		SDL_BlitSurface(configure_text, NULL, screen, &position);
 
 		SDL_Flip(screen);
 	}
