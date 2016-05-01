@@ -14,13 +14,13 @@
 #include "play.h"
 
 int score = 0;
-int level = 2;
+int level = 1;
 int keep_playing = 1;
 int high_score = 9999;
 int current_time  = 0;
 int previous_time = 0;
 
-SDL_Event playEvent;
+SDL_Event play_event;
 SDL_Surface *play_surface = NULL;
 TTF_Font *label_font   = NULL;
 TTF_Font *regular_font = NULL;
@@ -37,10 +37,10 @@ int play(SDL_Surface *screen)
 {
 	regular_font = TTF_OpenFont("resources/opensans.ttf", 20);
 	label_font = TTF_OpenFont("resources/opensans.ttf", 30);
-	black_block = IMG_Load("pictures/black_block.png");
-	purple_block = IMG_Load("pictures/purple_block.png");
-	red_block = IMG_Load("pictures/red_block.png");
-	blue_block = IMG_Load("pictures/blue_block.png");
+	black_block = IMG_Load("resources/pictures/black_block.png");
+	purple_block = IMG_Load("resources/pictures/purple_block.png");
+	red_block = IMG_Load("resources/pictures/red_block.png");
+	blue_block = IMG_Load("resources/pictures/blue_block.png");
 
 	score = 0;
 	high_score = load_high_score();
@@ -49,15 +49,15 @@ int play(SDL_Surface *screen)
 
 	while (keep_playing)
 	{
-		while(SDL_PollEvent(&playEvent))
+		while(SDL_PollEvent(&play_event))
 		{
-			switch(playEvent.type)
+			switch(play_event.type)
 			{
 			case SDL_QUIT:
 				keep_playing = 0;
 				break;
 			case SDL_KEYDOWN:
-				switch(playEvent.key.keysym.sym)
+				switch(play_event.key.keysym.sym)
 				{
 				case SDLK_RETURN:
 					keep_playing = 0;
@@ -180,18 +180,18 @@ void draw_game_borders(SDL_Surface *screen)
 	for (int y = 0; y < WINDOW_HEIGHT; y++) {
 		for (int x = 0; x < WINDOW_WIDTH; x++) {
 			// top border
-			if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH - GAME_BORDER_WIDTH) {
+			if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH) {
 				put_pixel(screen, x, y, &pixel_white);
 			}
 			// bottom border
-			if (y > GAME_AREA_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH - GAME_BORDER_WIDTH) {
+			if (y > GAME_AREA_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH) {
 				put_pixel(screen, x, y, &pixel_white);
 			}
 
 			// left and right borders
 			if (x < GAME_BORDER_WIDTH) {
 				put_pixel(screen, 0 + x, y, &pixel_white);
-				put_pixel(screen,  GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &pixel_white);
+				put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &pixel_white);
 			}
 		}
 	}
@@ -206,7 +206,7 @@ void put_pixel(SDL_Surface* screen, int x, int y, pixel* p)
 	*p_screen = SDL_MapRGBA(screen->format, p->r, p->g, p->b, p->alpha);
 }
 
-/*
+/**
  * Displays integer informations such as score, max. score or level.
  *
  * @param SDL_Surface surface
