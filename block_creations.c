@@ -59,12 +59,12 @@ void get_next_tetrimino(int tetrino[][4])
 	}
 }
 
-int nextTetrino(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
+int nextTetrino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
 {
 	int tetrino[4][4];
 	int x, y;
-	for(x = 0; x < WIDTH_BLOCK_NB; x++) {
-		for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
+	for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (current_grid[x][y] == CURRENT) {
 				grid[x][y] = BLOCK;
 			}
@@ -76,15 +76,15 @@ int nextTetrino(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK
 
 	get_next_tetrimino(tetrino);
 
-	for(x = (WIDTH_BLOCK_NB/2); x < (WIDTH_BLOCK_NB/2)+4; x++) {
+	for(x = (HORIZONTAL_BLOCK_NB/2); x < (HORIZONTAL_BLOCK_NB/2)+4; x++) {
 		for (y = 0; y < 4; y++) {
-			if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 1 && grid[x][y] == BLOCK) {
+			if (tetrino[x - (HORIZONTAL_BLOCK_NB/2)][y] == 1 && grid[x][y] == BLOCK) {
 				return 0;
 			}
-			if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 1) {
+			if (tetrino[x - (HORIZONTAL_BLOCK_NB/2)][y] == 1) {
 				current_grid[x][y] = CURRENT;
 			}
-			if (tetrino[x - (WIDTH_BLOCK_NB/2)][y] == 2) {
+			if (tetrino[x - (HORIZONTAL_BLOCK_NB/2)][y] == 2) {
 				current_grid[x][y] = MATRIX_FILL;
 			}
 		}
@@ -93,11 +93,11 @@ int nextTetrino(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK
 	return 1;
 }
 
-void removeFullLines(block grid[][HEIGHT_BLOCK_NB], int * score)
+void removeFullLines(block grid[][VERTICAL_BLOCK_NB], int * score)
 {
 	int x, y;
 
-	for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
+	for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 		if (isLineFull(grid, y)) {
 			shiftGrid(grid, y);
 			*score = *score + 10;
@@ -107,9 +107,9 @@ void removeFullLines(block grid[][HEIGHT_BLOCK_NB], int * score)
 	update_high_score(*score);
 }
 
-int isLineFull(block grid[][HEIGHT_BLOCK_NB], int line_number)
+int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
-	for(int x = 0; x < WIDTH_BLOCK_NB; x++) {
+	for(int x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
 		if (grid[x][line_number] == EMPTY) {
 			return 0;
 		}
@@ -118,10 +118,10 @@ int isLineFull(block grid[][HEIGHT_BLOCK_NB], int line_number)
 	return 1;
 }
 
-void shiftGrid(block grid[][HEIGHT_BLOCK_NB], int line_number)
+void shiftGrid(block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
 	for (int y = line_number; y >= 0; y--) {
-		for(int x = 0; x < WIDTH_BLOCK_NB; x++) {
+		for(int x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
 			if (y == 0) {
 				grid[x][0] = EMPTY;
 			} else {
