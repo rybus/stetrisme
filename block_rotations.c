@@ -95,10 +95,6 @@ int transpose(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, in
 {
 	int dimension = (max_x - min_x) + 1;
 
-	if (min_x - dimension < 0) {
-			printf("Min_x: %d, dimension: %d\n", min_x, dimension);
-			return 0;
-	}
 	if ((max_x + dimension)/2 > WIDTH_BLOCK_NB) {
 		printf("Max_x: %d, dimension: %d\n", max_x, dimension);
 		return 0;

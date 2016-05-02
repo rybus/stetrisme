@@ -28,10 +28,15 @@ SDL_Surface *red_block = NULL;
 SDL_Surface *black_block = NULL;
 SDL_Surface *purple_block = NULL;
 SDL_Surface *blue_block = NULL;
+SDL_Surface *label_surface  = NULL;
+SDL_Surface *number_surface = NULL;
 SDL_Color white_color  = {255, 255, 255};
 SDL_Color fushia_color = {0, 152, 247};
 block grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
 block current_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
+char score_label_text[6]          = "score";
+char maximum_score_label_text[11] = "max. score";
+char current_level_label_text[6]  = "level";
 
 int play(SDL_Surface *screen)
 {
@@ -98,6 +103,16 @@ int play(SDL_Surface *screen)
 		SDL_Flip(screen);
 	}
 
+	TTF_CloseFont(label_font);
+	TTF_CloseFont(regular_font);
+	SDL_FreeSurface(red_block);
+	SDL_FreeSurface(blue_block);
+	SDL_FreeSurface(purple_block);
+	SDL_FreeSurface(black_block);
+	SDL_FreeSurface(play_surface);
+	SDL_FreeSurface(screen);
+
+
 	return EXIT_SUCCESS;
 }
 
@@ -150,9 +165,6 @@ void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block
 void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
 {
 	SDL_Rect position;
-	char score_label_text[6]          = "score";
-	char maximum_score_label_text[11] = "max. score";
-	char current_level_label_text[6]  = "level";
 
 	erase_surface(screen);
 	draw_game_borders(screen);
@@ -215,17 +227,17 @@ void put_pixel(SDL_Surface* screen, int x, int y, pixel* p)
  */
 void print_integer_informations(SDL_Surface *screen, char *label, int number, SDL_Rect *position)
 {
-	SDL_Surface *label_surface  = NULL;
-	SDL_Surface *number_surface = NULL;
 	char number_text[10];
 	sprintf(number_text, "%d", number);
 
-	label_surface  = TTF_RenderText_Blended(label_font, label, white_color);
+	label_surface = TTF_RenderText_Blended(label_font, label, white_color);
 	SDL_BlitSurface(label_surface, NULL, screen, position);
+	SDL_FreeSurface(label_surface);
 
 	position->y = position->y + 40;
 	number_surface = TTF_RenderText_Blended(regular_font, number_text, fushia_color);
 	SDL_BlitSurface(number_surface, NULL, screen, position);
+	SDL_FreeSurface(number_surface);
 }
 
 /*

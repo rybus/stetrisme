@@ -8,15 +8,23 @@
 #include "constants.h"
 #include "play.h"
 
+void freeScreenElements();
+
+TTF_Font *font_title   = NULL;
+TTF_Font *font_action = NULL;
+SDL_Surface *screen = NULL;
+SDL_Surface *tetrisHome = NULL;
+SDL_Surface *title_text = NULL;
+SDL_Surface *play_text = NULL;
+
 int main(int argc, char *argv[])
 {
 	SDL_Color white_color  = {255, 255, 255};
 	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_Surface *screen = NULL, *tetrisHome = NULL, *title_text = NULL, *play_text = NULL;
+
 	SDL_Event event;
 	int continuer = 1;
 	SDL_Rect position;
-	TTF_Font *font_title = NULL, *font_action;
 
 	screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if (screen == NULL) {
@@ -38,7 +46,18 @@ int main(int argc, char *argv[])
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
 	tetrisHome = IMG_Load("resources/pictures/tetris.png");
+
+	position.x = 0;
+	position.y = 0;
 	SDL_BlitSurface(tetrisHome, NULL, screen, &position);
+
+	position.x = 60;
+	position.y = 10;
+	SDL_BlitSurface(title_text, NULL, screen, &position);
+
+	position.x = 200;
+	position.y = 200;
+	SDL_BlitSurface(play_text, NULL, screen, &position);
 
 	while (continuer)
 	{
@@ -52,6 +71,7 @@ int main(int argc, char *argv[])
 			switch(event.key.keysym.sym)
 			{
 			case SDLK_RETURN:
+				freeScreenElements();
 				play(screen);
 				continuer = 0;
 				break;
@@ -61,24 +81,21 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		position.x = 0;
-		position.y = 0;
-		SDL_BlitSurface(tetrisHome, NULL, screen, &position);
-
-		position.x = 60;
-		position.y = 10;
-		SDL_BlitSurface(title_text, NULL, screen, &position);
-
-		position.x = 200;
-		position.y = 200;
-		SDL_BlitSurface(play_text, NULL, screen, &position);
-
 		SDL_Flip(screen);
 	}
 
-	SDL_FreeSurface(tetrisHome);
 	SDL_Quit();
 	TTF_Quit();
 
 	return EXIT_SUCCESS;
+}
+
+void freeScreenElements()
+{
+	SDL_FreeSurface(tetrisHome);
+	SDL_FreeSurface(title_text);
+	SDL_FreeSurface(play_text);
+	SDL_FreeSurface(screen);
+	TTF_CloseFont(font_title);
+	TTF_CloseFont(font_action);
 }
