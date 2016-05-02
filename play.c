@@ -190,7 +190,7 @@ void draw_game_borders(SDL_Surface *screen)
 
 			// left and right borders
 			if (x < GAME_BORDER_WIDTH) {
-				put_pixel(screen, 0 + x, y, &pixel_white);
+				put_pixel(screen, x, y, &pixel_white);
 				put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &pixel_white);
 			}
 		}
