@@ -109,7 +109,7 @@ void removeFullLines(block grid[][VERTICAL_BLOCK_NB], int * score)
 
 int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
-	for(int x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+	for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		if (grid[x][line_number] == EMPTY) {
 			return 0;
 		}
@@ -121,7 +121,7 @@ int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)
 void shiftGrid(block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
 	for (int y = line_number; y >= 0; y--) {
-		for(int x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+		for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 			if (y == 0) {
 				grid[x][0] = EMPTY;
 			} else {

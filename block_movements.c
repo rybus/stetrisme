@@ -28,12 +28,12 @@ int moveDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOC
 {
 	int x, y;
 	if (isDownMovable(current_grid, grid)) {
-		for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+		for(x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
 			for (y = VERTICAL_BLOCK_NB - 1; y >= 0; y--)
 			{
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x][y + 1] = current_grid[x][y];
-					current_grid[x][y] = EMPTY;
+          current_grid[x][y] = EMPTY;
 				}
 			}
 		}
@@ -66,12 +66,16 @@ int isLeftMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL
 {
 	int x, y;
 
-	for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
-			if (x == 0 && current_grid[0][y] == CURRENT) {
-				return 0;
-			} else if (x != 0 && current_grid[x][y] == CURRENT && grid[x - 1][y] == BLOCK) {
-				return 0;
+			if (current_grid[x][y] == CURRENT) {
+				if (x == EXTRA_BLOCKS) {
+					printf("Cannot move A\n");
+					return 0;
+        } else if (grid[x - 1][y] == BLOCK || grid[x - 1][y] == BORDER_BLOCK) {
+					printf("Cannot move B\n");
+					return 0;
+				}
 			}
 		}
 	}
@@ -83,7 +87,7 @@ void moveLeft(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLO
 {
 	int x, y;
 	if (isLeftMovable(current_grid, grid)) {
-		for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+		for(x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
 			for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x - 1][y] = current_grid[x][y];
@@ -99,9 +103,9 @@ int isRightMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 {
 	int x, y;
 
-	for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS	; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
-			if (x == (HORIZONTAL_BLOCK_NB - 1) && (current_grid[HORIZONTAL_BLOCK_NB - 1][y] == CURRENT)) {
+			if (x == (HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1) && (current_grid[HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1][y] == CURRENT)) {
 				return 0;
 			} else if (current_grid[x][y] == CURRENT && (x < HORIZONTAL_BLOCK_NB - 2) && grid[x + 1][y] == BLOCK) {
 				return 0;
@@ -116,7 +120,7 @@ void moveRight(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BL
 {
 	int x, y;
 	if (isRightMovable(current_grid, grid)) {
-		for(x = HORIZONTAL_BLOCK_NB; x >= 0; x--) {
+		for(x = HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x > 0; x--) {
 			for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x + 1][y] = current_grid[x][y];

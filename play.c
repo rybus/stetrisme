@@ -32,8 +32,8 @@ SDL_Surface *label_surface  = NULL;
 SDL_Surface *number_surface = NULL;
 SDL_Color white_color  = {255, 255, 255};
 SDL_Color fushia_color = {0, 152, 247};
-block grid[HORIZONTAL_BLOCK_NB][VERTICAL_BLOCK_NB];
-block current_grid[HORIZONTAL_BLOCK_NB][VERTICAL_BLOCK_NB];
+block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 char score_label_text[6]          = "score";
 char maximum_score_label_text[11] = "max. score";
 char current_level_label_text[6]  = "level";
@@ -119,10 +119,12 @@ int play(SDL_Surface *screen)
 void initialize_game(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
 {
 	int x, y;
-	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2; x++) {
+	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
-			if (x < HORIZONTAL_BLOCK_NB) {
+			if (x >= EXTRA_BLOCKS && x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
 				grid[x][y] = EMPTY;
+			} else {
+				grid[x][y] = BORDER_BLOCK;
 			}
 			current_grid[x][y] = EMPTY;
 		}
@@ -136,9 +138,9 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
 	int x, y;
 	SDL_Rect position;
 
-	for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
-			position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
+			position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 			position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
 			if(grid[x][y] == BLOCK) {
