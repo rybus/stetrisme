@@ -21,6 +21,10 @@ int isClockWiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][V
 {
 	block fake_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
+	if (isSquare(current_grid)) {
+		return 0;
+	}
+
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
 			fake_grid[x][y] = current_grid[x][y];
@@ -63,6 +67,9 @@ int isCounterClockwiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block g
 {
 	block fake_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
+	if (isSquare(current_grid)) {
+		return 0;
+	}
 	memcpy(fake_grid, current_grid, sizeof(fake_grid));
 
 	rotateBlockCounterClockWise(fake_grid, min_x, max_x, min_y, max_y);
@@ -80,6 +87,35 @@ int isCounterClockwiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block g
 	}
 
 	return 1;
+}
+
+int isSquare(block current_grid[][VERTICAL_BLOCK_NB])
+{
+	int min_x = HORIZONTAL_BLOCK_NB, max_x = 0;
+	int min_y = VERTICAL_BLOCK_NB, max_y = 0;
+
+	for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
+			if (current_grid[x][y] == CURRENT) {
+				if (x < min_x) {
+					min_x = x;
+				}
+				if (x > max_x) {
+					max_x = x;
+				}
+				if (y < min_y) {
+					min_y = y;
+				}
+				if (y > max_y) {
+					max_y = y;
+				}
+			}
+		}
+	}
+	if (max_x - min_x == max_y - min_y) {
+		return 1;
+	}
+	return 0;
 }
 
 int rotateBlockClockWise(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
@@ -181,10 +217,8 @@ void reverseColumns(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int m
 
 void getMatrixDimensions(block grid[][VERTICAL_BLOCK_NB], int *min_x, int *max_x, int *min_y, int *max_y)
 {
-	int x, y;
-
-	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
-		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+	for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (grid[x][y] == CURRENT || grid[x][y] == MATRIX_FILL) {
 				if (x < *min_x) {
 					*min_x = x;

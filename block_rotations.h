@@ -14,3 +14,4 @@ void reverseColumns(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int m
 
 void printMatrix(block **grid, int x, int y);
 void printGrid(block grid[][VERTICAL_BLOCK_NB]);
+int isSquare(block current_grid[][VERTICAL_BLOCK_NB]);

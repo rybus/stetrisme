@@ -138,7 +138,7 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
 	int x, y;
 	SDL_Rect position;
 
-	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+	for(x = EXTRA_BLOCKS - 1; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 			position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
@@ -148,7 +148,7 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
 			} else if (current_grid[x][y] == CURRENT) {
 				SDL_BlitSurface(blue_block, NULL, screen, &position);
 			} else if (current_grid[x][y] == MATRIX_FILL) {
-			  SDL_BlitSurface(purple_block, NULL, screen, &position);
+				// SDL_BlitSurface(purple_block, NULL, screen, &position);
 			} else {
 				SDL_BlitSurface(black_block, NULL, screen, &position);
 			}
