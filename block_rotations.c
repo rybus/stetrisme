@@ -6,10 +6,10 @@
 #include "constants.h"
 #include "block_rotations.h"
 
-void rotateClockWise(block grid[][HEIGHT_BLOCK_NB], block current_grid[][HEIGHT_BLOCK_NB])
+void rotateClockWise(block grid[][VERTICAL_BLOCK_NB], block current_grid[][VERTICAL_BLOCK_NB])
 {
-	int min_x = WIDTH_BLOCK_NB, max_x = 0;
-	int min_y = HEIGHT_BLOCK_NB, max_y = 0;
+	int min_x = HORIZONTAL_BLOCK_NB, max_x = 0;
+	int min_y = VERTICAL_BLOCK_NB, max_y = 0;
 
 	getMatrixDimensions(current_grid, &min_x, &max_x, &min_y, &max_y);
 	if (isClockWiseRotatable(current_grid, grid, min_x, max_x, min_y, max_y)) {
@@ -17,13 +17,17 @@ void rotateClockWise(block grid[][HEIGHT_BLOCK_NB], block current_grid[][HEIGHT_
 	}
 }
 
-int isClockWiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
+int isClockWiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block fake_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
+	block fake_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+
+	if (isSquare(current_grid)) {
+		return 0;
+	}
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
-			fake_grid[x][y] = grid[x][y];
+			fake_grid[x][y] = current_grid[x][y];
 		}
 	}
 
@@ -33,8 +37,13 @@ int isClockWiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEI
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
-			if(fake_grid[x][y] == CURRENT && grid[x][y] == BLOCK) {
-				return 0;
+			if(fake_grid[x][y] == CURRENT) {
+				if (x < EXTRA_BLOCKS || x > HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
+					return 0;
+				}
+				if (grid[x][y] == BLOCK || grid[x][y] == BORDER_BLOCK) {
+					return 0;
+				}
 			}
 		}
 	}
@@ -42,10 +51,11 @@ int isClockWiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEI
 	return 1;
 }
 
-void rotateCounterClockWise(block grid[][HEIGHT_BLOCK_NB], block current_grid[][HEIGHT_BLOCK_NB])
+void rotateCounterClockWise(block grid[][VERTICAL_BLOCK_NB], block current_grid[][VERTICAL_BLOCK_NB])
 {
-	int min_x = WIDTH_BLOCK_NB, max_x = 0;
-	int min_y = HEIGHT_BLOCK_NB, max_y = 0;
+	int min_x = HORIZONTAL_BLOCK_NB + (2 * EXTRA_BLOCKS), max_x = 0;
+	int min_y = VERTICAL_BLOCK_NB, max_y = 0;
+
 	getMatrixDimensions(current_grid, &min_x, &max_x, &min_y, &max_y);
 
 	if (isCounterClockwiseRotatable(current_grid, grid, min_x, max_x, min_y, max_y)) {
@@ -53,27 +63,65 @@ void rotateCounterClockWise(block grid[][HEIGHT_BLOCK_NB], block current_grid[][
 	}
 }
 
-int isCounterClockwiseRotatable(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
+int isCounterClockwiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block fake_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
+	block fake_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
+	if (isSquare(current_grid)) {
+		return 0;
+	}
 	memcpy(fake_grid, current_grid, sizeof(fake_grid));
 
 	rotateBlockCounterClockWise(fake_grid, min_x, max_x, min_y, max_y);
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
-			if(fake_grid[x][y] == CURRENT && grid[x][y] == BLOCK) {
-				return 0;
-			}
+				if(fake_grid[x][y] == CURRENT) {
+					if (x < EXTRA_BLOCKS || x > HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
+						return 0;
+					}
+					if (grid[x][y] == BLOCK || grid[x][y] == BORDER_BLOCK) {
+						return 0;
+					}
+				}
 		}
 	}
 
 	return 1;
 }
 
-int rotateBlockClockWise(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
+int isSquare(block current_grid[][VERTICAL_BLOCK_NB])
+{
+	int min_x = HORIZONTAL_BLOCK_NB, max_x = 0;
+	int min_y = VERTICAL_BLOCK_NB, max_y = 0;
+
+	for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
+			if (current_grid[x][y] == CURRENT) {
+				if (x < min_x) {
+					min_x = x;
+				}
+				if (x > max_x) {
+					max_x = x;
+				}
+				if (y < min_y) {
+					min_y = y;
+				}
+				if (y > max_y) {
+					max_y = y;
+				}
+			}
+		}
+	}
+	if (max_x - min_x == max_y - min_y) {
+		return 1;
+	}
+	return 0;
+}
+
+int rotateBlockClockWise(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
 	if (1 == transpose(grid, min_x, max_x, min_y, max_y)) {
+
 		reverseColumns(grid, min_x, max_x, min_y, max_y);
 
 		return 1;
@@ -81,7 +129,7 @@ int rotateBlockClockWise(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, in
 	return 0;
 }
 
-int rotateBlockCounterClockWise(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
+int rotateBlockCounterClockWise(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
 	if (1 == transpose(grid, min_x, max_x, min_y, max_y)) {
 		reverseRows(grid, min_x, max_x, min_y, max_y);
@@ -91,16 +139,11 @@ int rotateBlockCounterClockWise(block grid[][HEIGHT_BLOCK_NB], int min_x, int ma
 	return 0;
 }
 
-int transpose(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
+int transpose(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
 	int dimension = (max_x - min_x) + 1;
 
-	if (min_x - dimension < 0) {
-			printf("Min_x: %d, dimension: %d\n", min_x, dimension);
-			return 0;
-	}
-	if ((max_x + dimension)/2 > WIDTH_BLOCK_NB) {
-		printf("Max_x: %d, dimension: %d\n", max_x, dimension);
+	if ((max_x + dimension)/2 > HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
 		return 0;
 	}
 
@@ -127,23 +170,20 @@ int transpose(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, in
 
 
 
-void printGrid(block grid[][HEIGHT_BLOCK_NB])
+void printGrid(block grid[][VERTICAL_BLOCK_NB])
 {
-	for (int j = 0; j < HEIGHT_BLOCK_NB; j++) {
-		for (int i = 0; i < WIDTH_BLOCK_NB; i++) {
-
-
+	for (int j = 0; j < VERTICAL_BLOCK_NB; j++) {
+		for (int i = 0; i < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; i++) {
 			printf("%d ", grid[i][j]);
-
 		}
 		printf("\n");
 	}
 	printf("\n");
 }
 
-void reverseRows(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
+void reverseRows(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block reversed_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
+	block reversed_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
@@ -158,9 +198,9 @@ void reverseRows(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y,
 	}
 }
 
-void reverseColumns(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
+void reverseColumns(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block reversed_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
+	block reversed_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
@@ -175,12 +215,10 @@ void reverseColumns(block grid[][HEIGHT_BLOCK_NB], int min_x, int max_x, int min
 	}
 }
 
-void getMatrixDimensions(block grid[][HEIGHT_BLOCK_NB], int *min_x, int *max_x, int *min_y, int *max_y)
+void getMatrixDimensions(block grid[][VERTICAL_BLOCK_NB], int *min_x, int *max_x, int *min_y, int *max_y)
 {
-	int x, y;
-
-	for(x = 0; x < WIDTH_BLOCK_NB; x++) {
-		for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
+	for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (grid[x][y] == CURRENT || grid[x][y] == MATRIX_FILL) {
 				if (x < *min_x) {
 					*min_x = x;

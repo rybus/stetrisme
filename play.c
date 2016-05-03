@@ -28,10 +28,15 @@ SDL_Surface *red_block = NULL;
 SDL_Surface *black_block = NULL;
 SDL_Surface *purple_block = NULL;
 SDL_Surface *blue_block = NULL;
+SDL_Surface *label_surface  = NULL;
+SDL_Surface *number_surface = NULL;
 SDL_Color white_color  = {255, 255, 255};
 SDL_Color fushia_color = {0, 152, 247};
-block grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
-block current_grid[WIDTH_BLOCK_NB][HEIGHT_BLOCK_NB];
+block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+char score_label_text[6]          = "score";
+char maximum_score_label_text[11] = "max. score";
+char current_level_label_text[6]  = "level";
 
 int play(SDL_Surface *screen)
 {
@@ -98,16 +103,28 @@ int play(SDL_Surface *screen)
 		SDL_Flip(screen);
 	}
 
+	TTF_CloseFont(label_font);
+	TTF_CloseFont(regular_font);
+	SDL_FreeSurface(red_block);
+	SDL_FreeSurface(blue_block);
+	SDL_FreeSurface(purple_block);
+	SDL_FreeSurface(black_block);
+	SDL_FreeSurface(play_surface);
+	SDL_FreeSurface(screen);
+
+
 	return EXIT_SUCCESS;
 }
 
-void initialize_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB], int * score)
+void initialize_game(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
 {
 	int x, y;
-	for(x = 0; x < WIDTH_BLOCK_NB + 2; x++) {
-		for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
-			if (x < WIDTH_BLOCK_NB) {
-				grid[x][y] = EMPTY;
+	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
+		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+			if (x >= EXTRA_BLOCKS && x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
+					grid[x][y] = EMPTY;
+			} else {
+				grid[x][y] = BORDER_BLOCK;
 			}
 			current_grid[x][y] = EMPTY;
 		}
@@ -116,14 +133,14 @@ void initialize_game(block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_
 	nextTetrino(current_grid, grid, score);
 }
 
-void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block grid[][HEIGHT_BLOCK_NB])
+void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
 {
 	int x, y;
 	SDL_Rect position;
 
-	for(x = 0; x < WIDTH_BLOCK_NB; x++) {
-		for (y = 0; y < HEIGHT_BLOCK_NB; y++) {
-			position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
+	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+			position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 			position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
 			if(grid[x][y] == BLOCK) {
@@ -131,7 +148,7 @@ void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block
 			} else if (current_grid[x][y] == CURRENT) {
 				SDL_BlitSurface(blue_block, NULL, screen, &position);
 			} else if (current_grid[x][y] == MATRIX_FILL) {
-			  SDL_BlitSurface(purple_block, NULL, screen, &position);
+				// SDL_BlitSurface(purple_block, NULL, screen, &position);
 			} else {
 				SDL_BlitSurface(black_block, NULL, screen, &position);
 			}
@@ -150,9 +167,6 @@ void draw_game(SDL_Surface *screen, block current_grid[][HEIGHT_BLOCK_NB], block
 void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
 {
 	SDL_Rect position;
-	char score_label_text[6]          = "score";
-	char maximum_score_label_text[11] = "max. score";
-	char current_level_label_text[6]  = "level";
 
 	erase_surface(screen);
 	draw_game_borders(screen);
@@ -190,7 +204,7 @@ void draw_game_borders(SDL_Surface *screen)
 
 			// left and right borders
 			if (x < GAME_BORDER_WIDTH) {
-				put_pixel(screen, 0 + x, y, &pixel_white);
+				put_pixel(screen, x, y, &pixel_white);
 				put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &pixel_white);
 			}
 		}
@@ -215,17 +229,17 @@ void put_pixel(SDL_Surface* screen, int x, int y, pixel* p)
  */
 void print_integer_informations(SDL_Surface *screen, char *label, int number, SDL_Rect *position)
 {
-	SDL_Surface *label_surface  = NULL;
-	SDL_Surface *number_surface = NULL;
 	char number_text[10];
 	sprintf(number_text, "%d", number);
 
-	label_surface  = TTF_RenderText_Blended(label_font, label, white_color);
+	label_surface = TTF_RenderText_Blended(label_font, label, white_color);
 	SDL_BlitSurface(label_surface, NULL, screen, position);
+	SDL_FreeSurface(label_surface);
 
 	position->y = position->y + 40;
 	number_surface = TTF_RenderText_Blended(regular_font, number_text, fushia_color);
 	SDL_BlitSurface(number_surface, NULL, screen, position);
+	SDL_FreeSurface(number_surface);
 }
 
 /*
