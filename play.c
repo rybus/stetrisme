@@ -122,7 +122,7 @@ void initialize_game(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTI
 	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (x >= EXTRA_BLOCKS && x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
-				grid[x][y] = EMPTY;
+					grid[x][y] = EMPTY;
 			} else {
 				grid[x][y] = BORDER_BLOCK;
 			}

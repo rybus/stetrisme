@@ -19,11 +19,11 @@ void rotateClockWise(block grid[][VERTICAL_BLOCK_NB], block current_grid[][VERTI
 
 int isClockWiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block fake_grid[HORIZONTAL_BLOCK_NB][VERTICAL_BLOCK_NB];
+	block fake_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
-			fake_grid[x][y] = grid[x][y];
+			fake_grid[x][y] = current_grid[x][y];
 		}
 	}
 
@@ -33,8 +33,13 @@ int isClockWiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][V
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
-			if(fake_grid[x][y] == CURRENT && grid[x][y] == BLOCK) {
-				return 0;
+			if(fake_grid[x][y] == CURRENT) {
+				if (x < EXTRA_BLOCKS || x > HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
+					return 0;
+				}
+				if (grid[x][y] == BLOCK || grid[x][y] == BORDER_BLOCK) {
+					return 0;
+				}
 			}
 		}
 	}
@@ -44,8 +49,9 @@ int isClockWiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][V
 
 void rotateCounterClockWise(block grid[][VERTICAL_BLOCK_NB], block current_grid[][VERTICAL_BLOCK_NB])
 {
-	int min_x = HORIZONTAL_BLOCK_NB, max_x = 0;
+	int min_x = HORIZONTAL_BLOCK_NB + (2 * EXTRA_BLOCKS), max_x = 0;
 	int min_y = VERTICAL_BLOCK_NB, max_y = 0;
+
 	getMatrixDimensions(current_grid, &min_x, &max_x, &min_y, &max_y);
 
 	if (isCounterClockwiseRotatable(current_grid, grid, min_x, max_x, min_y, max_y)) {
@@ -55,16 +61,21 @@ void rotateCounterClockWise(block grid[][VERTICAL_BLOCK_NB], block current_grid[
 
 int isCounterClockwiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block fake_grid[HORIZONTAL_BLOCK_NB][VERTICAL_BLOCK_NB];
+	block fake_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
 	memcpy(fake_grid, current_grid, sizeof(fake_grid));
 
 	rotateBlockCounterClockWise(fake_grid, min_x, max_x, min_y, max_y);
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
-			if(fake_grid[x][y] == CURRENT && grid[x][y] == BLOCK) {
-				return 0;
-			}
+				if(fake_grid[x][y] == CURRENT) {
+					if (x < EXTRA_BLOCKS || x > HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
+						return 0;
+					}
+					if (grid[x][y] == BLOCK || grid[x][y] == BORDER_BLOCK) {
+						return 0;
+					}
+				}
 		}
 	}
 
@@ -74,6 +85,7 @@ int isCounterClockwiseRotatable(block current_grid[][VERTICAL_BLOCK_NB], block g
 int rotateBlockClockWise(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
 	if (1 == transpose(grid, min_x, max_x, min_y, max_y)) {
+
 		reverseColumns(grid, min_x, max_x, min_y, max_y);
 
 		return 1;
@@ -96,7 +108,6 @@ int transpose(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, 
 	int dimension = (max_x - min_x) + 1;
 
 	if ((max_x + dimension)/2 > HORIZONTAL_BLOCK_NB) {
-		printf("Max_x: %d, dimension: %d\n", max_x, dimension);
 		return 0;
 	}
 
@@ -136,7 +147,7 @@ void printGrid(block grid[][VERTICAL_BLOCK_NB])
 
 void reverseRows(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block reversed_grid[HORIZONTAL_BLOCK_NB][VERTICAL_BLOCK_NB];
+	block reversed_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
@@ -153,7 +164,7 @@ void reverseRows(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_
 
 void reverseColumns(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, int max_y)
 {
-	block reversed_grid[HORIZONTAL_BLOCK_NB][VERTICAL_BLOCK_NB];
+	block reversed_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
 	for (int y = min_y; y <= max_y; y++) {
 		for (int x = min_x; x <= max_x; x++) {
@@ -172,7 +183,7 @@ void getMatrixDimensions(block grid[][VERTICAL_BLOCK_NB], int *min_x, int *max_x
 {
 	int x, y;
 
-	for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (grid[x][y] == CURRENT || grid[x][y] == MATRIX_FILL) {
 				if (x < *min_x) {
