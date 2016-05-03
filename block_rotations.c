@@ -143,7 +143,7 @@ int transpose(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, 
 {
 	int dimension = (max_x - min_x) + 1;
 
-	if ((max_x + dimension)/2 > HORIZONTAL_BLOCK_NB) {
+	if ((max_x + dimension)/2 > HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
 		return 0;
 	}
 
@@ -172,8 +172,8 @@ int transpose(block grid[][VERTICAL_BLOCK_NB], int min_x, int max_x, int min_y, 
 
 void printGrid(block grid[][VERTICAL_BLOCK_NB])
 {
-	for (int j = 0; j < VERTICAL_BLOCK_NB + 2*EXTRA_BLOCKS; j++) {
-		for (int i = 0; i < HORIZONTAL_BLOCK_NB; i++) {
+	for (int j = 0; j < VERTICAL_BLOCK_NB; j++) {
+		for (int i = 0; i < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; i++) {
 			printf("%d ", grid[i][j]);
 		}
 		printf("\n");

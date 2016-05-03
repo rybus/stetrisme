@@ -62,7 +62,7 @@ int nextTetrino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_B
 {
 	int tetrino[4][4];
 	int x, y;
-	for(x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
+	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (current_grid[x][y] == CURRENT) {
 				grid[x][y] = BLOCK;
