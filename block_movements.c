@@ -33,7 +33,7 @@ int moveDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOC
 			{
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x][y + 1] = current_grid[x][y];
-          current_grid[x][y] = EMPTY;
+					current_grid[x][y] = EMPTY;
 				}
 			}
 		}
@@ -71,7 +71,7 @@ int isLeftMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL
 			if (current_grid[x][y] == CURRENT) {
 				if (x == EXTRA_BLOCKS) {
 					return 0;
-        } else if (grid[x - 1][y] == BLOCK || grid[x - 1][y] == BORDER_BLOCK) {
+				} else if (grid[x - 1][y] == BLOCK || grid[x - 1][y] == BORDER_BLOCK) {
 					return 0;
 				}
 			}
