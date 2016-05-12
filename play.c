@@ -139,9 +139,9 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
 	SDL_Rect position;
 
 	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+		for (y = 2; y < VERTICAL_BLOCK_NB; y++) {
 			position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
-			position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
+			position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
 			if(grid[x][y] == BLOCK) {
 				SDL_BlitSurface(red_block, NULL, screen, &position);
@@ -198,7 +198,7 @@ void draw_game_borders(SDL_Surface *screen)
 				put_pixel(screen, x, y, &pixel_white);
 			}
 			// bottom border
-			if (y > GAME_AREA_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH) {
+			if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH) {
 				put_pixel(screen, x, y, &pixel_white);
 			}
 
