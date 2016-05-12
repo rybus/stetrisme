@@ -172,7 +172,7 @@ void draw_game_set(SDL_Surface *screen, int score, int level, int high_score)
 	draw_game_borders(screen);
 
 	position.x = GAME_AREA_WIDTH + 10;
-	position.y = 200;
+	position.y = 70;
 	print_integer_informations(screen, score_label_text, score, &position);
 
 	position.y = position.y + 80;
