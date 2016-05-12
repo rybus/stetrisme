@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 	position.y = 10;
 	SDL_BlitSurface(title_text, NULL, screen, &position);
 
-	position.x = 200;
+	position.x = 170;
 	position.y = 200;
 	SDL_BlitSurface(play_text, NULL, screen, &position);
 
