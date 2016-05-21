@@ -24,10 +24,10 @@ SDL_Event play_event;
 SDL_Surface *play_surface = NULL;
 TTF_Font *label_font   = NULL;
 TTF_Font *regular_font = NULL;
-SDL_Surface *red_block = NULL;
-SDL_Surface *black_block = NULL;
+SDL_Surface *a_block = NULL;
+SDL_Surface *background_block = NULL;
 SDL_Surface *purple_block = NULL;
-SDL_Surface *blue_block = NULL;
+SDL_Surface *b_block = NULL;
 SDL_Surface *label_surface  = NULL;
 SDL_Surface *number_surface = NULL;
 SDL_Color white_color  = {255, 255, 255};
@@ -42,10 +42,15 @@ int play(SDL_Surface *screen)
 {
 	regular_font = TTF_OpenFont("resources/opensans.ttf", 20);
 	label_font = TTF_OpenFont("resources/opensans.ttf", 30);
-	black_block = IMG_Load("resources/pictures/black_block.png");
-	purple_block = IMG_Load("resources/pictures/purple_block.png");
-	red_block = IMG_Load("resources/pictures/red_block.png");
-	blue_block = IMG_Load("resources/pictures/blue_block.png");
+	background_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+	SDL_FillRect(background_block, NULL, SDL_MapRGB(background_block->format, 0, 0, 0));
+	purple_block =  SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+	SDL_FillRect(purple_block, NULL, SDL_MapRGB(purple_block->format, 255, 0, 228));
+
+	a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+	SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, 255, 0, 0));
+	b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+	SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, 0, 0, 131));
 
 	score = 0;
 	high_score = load_high_score();
@@ -105,10 +110,10 @@ int play(SDL_Surface *screen)
 
 	TTF_CloseFont(label_font);
 	TTF_CloseFont(regular_font);
-	SDL_FreeSurface(red_block);
-	SDL_FreeSurface(blue_block);
+	SDL_FreeSurface(a_block);
+	SDL_FreeSurface(b_block);
 	SDL_FreeSurface(purple_block);
-	SDL_FreeSurface(black_block);
+	SDL_FreeSurface(background_block);
 	SDL_FreeSurface(play_surface);
 	SDL_FreeSurface(screen);
 
@@ -144,13 +149,13 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
 			position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
 			if(grid[x][y] == BLOCK) {
-				SDL_BlitSurface(red_block, NULL, screen, &position);
+				SDL_BlitSurface(a_block, NULL, screen, &position);
 			} else if (current_grid[x][y] == CURRENT) {
-				SDL_BlitSurface(blue_block, NULL, screen, &position);
+				SDL_BlitSurface(b_block, NULL, screen, &position);
 			} else if (current_grid[x][y] == MATRIX_FILL) {
 				// SDL_BlitSurface(purple_block, NULL, screen, &position);
 			} else {
-				SDL_BlitSurface(black_block, NULL, screen, &position);
+				SDL_BlitSurface(background_block, NULL, screen, &position);
 			}
 		}
 	}
