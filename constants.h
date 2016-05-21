@@ -3,7 +3,7 @@
  */
 #ifndef DEF_CONSTANTS
 #define DEF_CONSTANTS
-    #define BLOCK_SIZE          25
+    #define BLOCK_SIZE          30
     #define HORIZONTAL_BLOCK_NB 10
     #define VERTICAL_BLOCK_NB   22
     #define GAME_BORDER_WIDTH 2

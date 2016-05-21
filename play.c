@@ -42,13 +42,16 @@ int play(SDL_Surface *screen)
 {
 	regular_font = TTF_OpenFont("resources/opensans.ttf", 20);
 	label_font = TTF_OpenFont("resources/opensans.ttf", 30);
+
 	background_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
 	SDL_FillRect(background_block, NULL, SDL_MapRGB(background_block->format, 0, 0, 0));
+
 	purple_block =  SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
 	SDL_FillRect(purple_block, NULL, SDL_MapRGB(purple_block->format, 255, 0, 228));
 
 	a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
 	SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, 255, 0, 0));
+
 	b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
 	SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, 0, 0, 131));
 
