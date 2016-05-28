@@ -5,13 +5,15 @@
 #include <SDL/SDL_ttf.h>
 #include <string.h>
 #include <errno.h>
+#include <libconfig.h>
 
 #include "constants.h"
-#include "score.h"
 #include "block_creations.h"
 #include "block_movements.h"
 #include "block_rotations.h"
 #include "play.h"
+#include "score.h"
+#include "colors.h"
 
 int score = 0;
 int level = 1;
@@ -37,11 +39,13 @@ block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 char score_label_text[6]          = "score";
 char maximum_score_label_text[11] = "max. score";
 char current_level_label_text[6]  = "level";
+struct color first_color, second_color;
 
 int play(SDL_Surface *screen)
 {
 	regular_font = TTF_OpenFont("resources/opensans.ttf", 20);
 	label_font = TTF_OpenFont("resources/opensans.ttf", 30);
+	load_colors(&first_color, &second_color);
 
 	background_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
 	SDL_FillRect(background_block, NULL, SDL_MapRGB(background_block->format, 0, 0, 0));
@@ -50,15 +54,16 @@ int play(SDL_Surface *screen)
 	SDL_FillRect(purple_block, NULL, SDL_MapRGB(purple_block->format, 255, 0, 228));
 
 	a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-	SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, 255, 0, 0));
+	SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, first_color.r, first_color.g, first_color.b));
 
 	b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-	SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, 0, 0, 131));
+	SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, second_color.r, second_color.g, second_color.b));
 
 	score = 0;
 	high_score = load_high_score();
 
 	initialize_game(current_grid, grid, &score);
+
 
 	while (keep_playing)
 	{
