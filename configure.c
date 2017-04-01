@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <libconfig.h>
 
+#include "constants.h"
 #include "colors.h"
 #include "configure.h"
 

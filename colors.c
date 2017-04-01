@@ -1,4 +1,7 @@
 #include <libconfig.h>
+#include <stdint.h>
+
+#include "constants.h"
 #include "colors.h"
 
 void load_colors(struct color *a, struct color *b)
