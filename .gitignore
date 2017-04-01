@@ -23,6 +23,7 @@ high_score.txt
 *.a
 *.la
 *.lo
+lib
 
 # Shared objects (inc. Windows DLLs)
 *.dll

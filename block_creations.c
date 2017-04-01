@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 #include "constants.h"
-#include "score.h"
 #include "block_creations.h"
+#include "score.h"
 
 void get_next_tetrimino(int tetrino[][4])
 {
