@@ -35,4 +35,6 @@ void load_colors(struct color *a, struct color *b)
     b->g = 200;
     b->b = 200;
   }
+
+	config_destroy(&cfg);
 }

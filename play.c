@@ -111,6 +111,7 @@ int play(SDL_Surface *screen)
 			previous_time = current_time;
 		}
 
+		high_score = load_high_score();
 		draw_game_set(screen, score, level, high_score);
 		draw_game(screen, current_grid, grid);
 		SDL_Flip(screen);

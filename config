@@ -1,9 +1,0 @@
-application:
-{
-  max_score = 140
-  colors:
-  {
-        a = { r = 255; g = 0; b = 0 };
-        b = { r = 0; g = 0; b = 131 };
-  };
-};
