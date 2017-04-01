@@ -4,7 +4,6 @@
 void load_colors(struct color *a, struct color *b)
 {
   char *config_file_name = "config.txt";
-  int high_score = 0;
   config_t cfg;
   config_setting_t *setting;
   const char *first_color, *second_color;
@@ -35,6 +34,32 @@ void load_colors(struct color *a, struct color *b)
     b->g = 200;
     b->b = 200;
   }
+
+	config_destroy(&cfg);
+}
+
+void save_colors(struct color a, struct color b)
+{
+  char *config_file_name = "config.txt";
+  config_t cfg;
+  config_setting_t *setting_color_a, *setting_color_b;
+  char first_color[11], second_color[11];
+  config_init(&cfg);
+
+  if (!config_read_file(&cfg, config_file_name))
+  {
+    printf("\n%s:%d - %s", config_error_file(&cfg), config_error_line(&cfg), config_error_text(&cfg));
+    config_destroy(&cfg);
+  }
+
+  sprintf(first_color, "%d;%d;%d", a.r, a.g, a.b);
+  sprintf(second_color, "%d;%d;%d", b.r, b.g, b.b);
+  setting_color_a = config_lookup(&cfg, "colors.a");
+  setting_color_b = config_lookup(&cfg, "colors.b");
+  config_setting_set_string(setting_color_a, first_color);
+  config_setting_set_string(setting_color_b, second_color);
+
+  config_write_file(&cfg, config_file_name);
 
 	config_destroy(&cfg);
 }

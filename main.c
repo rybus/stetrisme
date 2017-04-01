@@ -5,7 +5,7 @@
 #include <SDL/SDL_ttf.h>
 #include <stdint.h>
 
-
+#include "configure.h"
 #include "constants.h"
 #include "play.h"
 
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 				}
 				else
 				{
-					// configure(screen);
+					configure(screen);
 				}
 				continuer = 0;
 				break;
@@ -125,19 +125,19 @@ int main(int argc, char *argv[])
 void print_selected_option(int selected_option, SDL_Surface *screen, SDL_Surface *right_arrow, SDL_Surface *black_block)
 {
 	SDL_Rect position;
-	position.x = 120;
+	position.x = 130;
 	if (selected_option == PLAY_OPTION)
 	{
-		position.y = 200;
+		position.y = 205;
 		SDL_BlitSurface(right_arrow, NULL, screen, &position);
-		position.y = 250;
+		position.y = 255;
 		SDL_BlitSurface(black_block, NULL, screen, &position);
 	}
 	else
  	{
-		position.y = 250;
+		position.y = 255;
 		SDL_BlitSurface(right_arrow, NULL, screen, &position);
-		position.y = 200;
+		position.y = 205;
 		SDL_BlitSurface(black_block, NULL, screen, &position);
 	}
 }
