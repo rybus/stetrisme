@@ -1,5 +1,5 @@
-int play(SDL_Surface *screen);
-void draw_game_set(SDL_Surface *screen, int current_score, int current_level, int max_score);
+void play(SDL_Surface *screen);
+void draw_game_set(SDL_Surface *screen, int score, int level);
 void print_integer_informations(SDL_Surface *screen, char *label, int number, SDL_Rect *position);
 void erase_surface(SDL_Surface *screen);
 void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB]);

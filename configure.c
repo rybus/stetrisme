@@ -16,13 +16,13 @@ int configure(SDL_Surface *screen)
   struct color first_color, second_color;
 
   load_colors(&first_color, &second_color);
-  first_color.r = 9;
-  first_color.g = 211;
-  first_color.b = 0;
-
-  second_color.r = 0;
-  second_color.g = 2;
-  second_color.b = 3;
+  // first_color.r = 9;
+  // first_color.g = 211;
+  // first_color.b = 0;
+  //
+  // second_color.r = 0;
+  // second_color.g = 2;
+  // second_color.b = 3;
 
   save_colors(first_color, second_color);
 }
