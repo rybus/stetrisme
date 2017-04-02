@@ -19,11 +19,13 @@
 void play(SDL_Surface *screen)
 {
     int score = 0;
+    int high_score = 0;
     int level = 1;
     int current_time  = 0;
     int previous_time = 0;
     Input in;
     SDL_Surface *play_surface = NULL;
+    high_score = load_high_score();
 
     memset(&in, 0, sizeof(in));
     block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
@@ -68,11 +70,24 @@ void play(SDL_Surface *screen)
             previous_time = current_time;
         }
 
-        draw_game_set(screen, score, level);
+        if (score > high_score) {
+        //    refresh_high_score(screen, score);
+        }
+
+        draw_game_set(screen, score, high_score, level);
         draw_game(screen, current_grid, grid);
         SDL_Flip(screen);
     }
 }
+
+// void refresh_high_score(SDL_Surface *screen, int score)
+// {
+//     update_high_score(score);
+//     SDL_Rect position;
+//
+//     position.y = 190;
+//     SDL_BlitSurface(score, NULL, screen, &position);
+// }
 
 void initialize_game(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
 {
@@ -95,11 +110,13 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
 {
     SDL_Surface *a_block = NULL;
     SDL_Surface *b_block = NULL;
+    // rename background
     SDL_Surface *background_block = NULL;
     SDL_Rect position;
     struct color first_color, second_color;
     int x, y;
 
+    // load_colors_from_config
     load_colors(&first_color, &second_color);
 
     background_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
@@ -141,16 +158,13 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
 * @param int score     current score
 * @param int level     current level
 */
-void draw_game_set(SDL_Surface *screen, int score, int level)
+void draw_game_set(SDL_Surface *screen, int score, int high_score, int level)
 {
     SDL_Rect position;
     char score_label_text[6]          = "score";
     char maximum_score_label_text[11] = "max. score";
     char current_level_label_text[6]  = "level";
-    int high_score = -1;
 
-
-    high_score = load_high_score();
     erase_surface(screen);
     draw_game_borders(screen);
 

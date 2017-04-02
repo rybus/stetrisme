@@ -102,8 +102,6 @@ void removeFullLines(block grid[][VERTICAL_BLOCK_NB], int * score)
 			*score = *score + 10;
 		}
 	}
-
-	update_high_score(*score);
 }
 
 int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)

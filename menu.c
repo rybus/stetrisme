@@ -5,8 +5,8 @@
 #include <SDL/SDL_ttf.h>
 #include <stdint.h>
 
-#include "configure.h"
 #include "constants.h"
+#include "configure.h"
 #include "play.h"
 #include "menu.h"
 #include "events.h"
@@ -90,6 +90,15 @@ void print_menu(SDL_Surface *screen, int selected_option)
     SDL_BlitSurface(configure_text, NULL, screen, &position);
 
     print_selected_option(selected_option, screen, right_arrow, black_block);
+
+    SDL_FreeSurface(black_block);
+    SDL_FreeSurface(tetrisHome);
+    SDL_FreeSurface(right_arrow);
+    SDL_FreeSurface(title_text);
+    SDL_FreeSurface(play_text);
+    SDL_FreeSurface(configure_text);
+    TTF_CloseFont(font_title);
+    TTF_CloseFont(font_action);
 }
 
 void print_selected_option(int selected_option, SDL_Surface *screen, SDL_Surface *right_arrow, SDL_Surface *black_block)

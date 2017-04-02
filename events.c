@@ -9,10 +9,10 @@ void UpdateEvents(Input* in)
 		switch (event.type)
 		{
 		case SDL_KEYDOWN:
-			in->key[event.key.keysym.sym]=1;
+			in->key[event.key.keysym.sym] = 1;
 			break;
 		case SDL_KEYUP:
-			in->key[event.key.keysym.sym]=0;
+			in->key[event.key.keysym.sym] = 0;
 			break;
 		default:
 			break;
