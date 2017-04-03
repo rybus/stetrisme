@@ -186,11 +186,12 @@ void draw_game_borders(SDL_Surface *screen)
     pixel_white.g = (Uint8) 0xff;
     pixel_white.b = (Uint8) 0xff;
     pixel_white.alpha = (Uint8) 128;
+    int x, y;
 
     SDL_LockSurface(screen);
 
-    for (int y = 0; y < WINDOW_HEIGHT; y++) {
-        for (int x = 0; x < WINDOW_WIDTH; x++) {
+    for (y = 0; y < WINDOW_HEIGHT; y++) {
+        for (x = 0; x < WINDOW_WIDTH; x++) {
             // top border
             if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH) {
                 put_pixel(screen, x, y, &pixel_white);

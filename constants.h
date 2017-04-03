@@ -24,6 +24,7 @@ typedef struct {
 	uint8_t alpha;
 } pixel;
 
+// rename color > s_color et color > t_color
 typedef struct color
 {
     int r;
