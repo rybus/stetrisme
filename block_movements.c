@@ -12,9 +12,7 @@ int isDownMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL
 	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
 		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (current_grid[x][y] == CURRENT) {
-				if (y == VERTICAL_BLOCK_NB - 1) {
-					return 0;
-				} else if (grid[x][y + 1] == BLOCK) {
+				if (y == VERTICAL_BLOCK_NB - 1 || grid[x][y + 1] == BLOCK) {
 					return 0;
 				}
 			}
@@ -26,11 +24,9 @@ int isDownMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL
 
 int moveDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
 {
-	int x, y;
 	if (isDownMovable(current_grid, grid)) {
-		for(x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
-			for (y = VERTICAL_BLOCK_NB - 1; y >= 0; y--)
-			{
+		for(int x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
+			for (int y = VERTICAL_BLOCK_NB - 1; y >= 0; y--) {
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x][y + 1] = current_grid[x][y];
 					current_grid[x][y] = EMPTY;
@@ -39,18 +35,16 @@ int moveDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOC
 		}
 
 		return 1;
-	} else {
+	} else
 		return next_tetromino(current_grid, grid, score);
-	}
+
 }
 
 int moveFullDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
 {
-	int x, y;
 	while (isDownMovable(current_grid, grid)) {
-		for(x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
-			for (y = VERTICAL_BLOCK_NB - 1; y >= 0; y--)
-			{
+		for (int x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
+			for (int y = VERTICAL_BLOCK_NB - 1; y >= 0; y--) {
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x][y + 1] = current_grid[x][y];
 					current_grid[x][y] = EMPTY;
@@ -64,16 +58,13 @@ int moveFullDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_
 
 int isLeftMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
 {
-	int x, y;
-
-	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+	for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (current_grid[x][y] == CURRENT) {
-				if (x == EXTRA_BLOCKS) {
+				if (x == EXTRA_BLOCKS)
 					return 0;
-				} else if (grid[x - 1][y] == BLOCK || grid[x - 1][y] == BORDER_BLOCK) {
+				else if (grid[x - 1][y] == BLOCK || grid[x - 1][y] == BORDER_BLOCK)
 					return 0;
-				}
 			}
 		}
 	}
@@ -83,10 +74,9 @@ int isLeftMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL
 
 void moveLeft(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
 {
-	int x, y;
 	if (isLeftMovable(current_grid, grid)) {
-		for(x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
-			for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+		for (int x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
+			for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x - 1][y] = current_grid[x][y];
 					current_grid[x][y] = EMPTY;
@@ -99,10 +89,8 @@ void moveLeft(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLO
 
 int isRightMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
 {
-	int x, y;
-
-	for(x = EXTRA_BLOCKS - 1; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+	for(int x = EXTRA_BLOCKS - 1; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (x == (HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1) && (current_grid[HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1][y] == CURRENT)) {
 				return 0;
 			}
@@ -117,10 +105,9 @@ int isRightMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 
 void moveRight(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
 {
-	int x, y;
 	if (isRightMovable(current_grid, grid)) {
-		for(x = HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS - 1; x >= 0; x--) {
-			for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+		for(int x = HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS - 1; x >= 0; x--) {
+			for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 				if (current_grid[x][y] != EMPTY) {
 					current_grid[x + 1][y] = current_grid[x][y];
 					current_grid[x][y] = EMPTY;
