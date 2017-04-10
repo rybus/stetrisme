@@ -47,17 +47,10 @@ int menu(SDL_Surface *screen)
 
 void print_menu(SDL_Surface *screen, int selected_option)
 {
-    TTF_Font *font_title   = NULL;
-    TTF_Font *font_action = NULL;
-    SDL_Surface *tetrisHome = NULL;
-    SDL_Surface *right_arrow = NULL;
-    SDL_Surface *title_text = NULL;
-    SDL_Surface *play_text = NULL;
-    SDL_Surface *configure_text = NULL;
-    SDL_Surface *black_block = NULL;
-
+    TTF_Font *font_title, *font_action;
+    SDL_Surface *tetrisHome, *right_arrow, *title_text;
+    SDL_Surface *play_text, *configure_text, *black_block;
     SDL_Rect position;
-
     SDL_Color white_color  = {255, 255, 255};
 
     font_title  = TTF_OpenFont("resources/opensans.ttf", 65);
@@ -105,16 +98,15 @@ void print_selected_option(int selected_option, SDL_Surface *screen, SDL_Surface
 {
     SDL_Rect position;
     position.x = 130;
+    position.y = 255;
     if (selected_option == PLAY_OPTION)
-    {
+    {        
+        SDL_BlitSurface(black_block, NULL, screen, &position);
         position.y = 205;
         SDL_BlitSurface(right_arrow, NULL, screen, &position);
-        position.y = 255;
-        SDL_BlitSurface(black_block, NULL, screen, &position);
     }
     else
     {
-        position.y = 255;
         SDL_BlitSurface(right_arrow, NULL, screen, &position);
         position.y = 205;
         SDL_BlitSurface(black_block, NULL, screen, &position);

@@ -30,7 +30,6 @@ Config_t load_config(void)
     if (line)
         free(line);
 
-
     sscanf(
         first_color,
         "%d;%d;%d",
@@ -52,5 +51,5 @@ Config_t load_config(void)
 
 void save_config(Config_t config)
 {
-
+    //
 }
