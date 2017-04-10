@@ -5,7 +5,6 @@
 
 #include "constants.h"
 #include "block_creations.h"
-#include "score.h"
 
 Tetromino_t get_next_tetromino(void)
 {

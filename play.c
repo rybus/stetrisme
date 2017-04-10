@@ -12,7 +12,6 @@
 #include "block_movements.h"
 #include "block_rotations.h"
 #include "play.h"
-#include "score.h"
 #include "config.h"
 #include "events.h"
 
@@ -83,14 +82,14 @@ void play(SDL_Surface *screen)
         //    refresh_high_score(screen, score);
         }
 
-
         draw_game(screen);
+        SDL_Flip(screen);
     }
 
     SDL_FreeSurface(a_block);
     SDL_FreeSurface(b_block);
     SDL_FreeSurface(background);
-    SDL_Flip(screen);
+
 }
 
 // void refresh_high_score(SDL_Surface *screen, int score)
