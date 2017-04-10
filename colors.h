@@ -1,2 +1,2 @@
-void load_colors(struct color *a, struct color *b);
-void save_colors(struct color a, struct color b);
+void load_colors(Color_t *a, Color_t *b);
+void save_colors(Color_t a, Color_t b);

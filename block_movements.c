@@ -40,7 +40,7 @@ int moveDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOC
 
 		return 1;
 	} else {
-		return nextTetrino(current_grid, grid, score);
+		return next_tetromino(current_grid, grid, score);
 	}
 }
 
@@ -59,7 +59,7 @@ int moveFullDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_
 		}
 	}
 
-	return nextTetrino(current_grid, grid, score);
+	return next_tetromino(current_grid, grid, score);
 }
 
 int isLeftMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])

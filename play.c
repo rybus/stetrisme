@@ -103,24 +103,20 @@ void initialize_game(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTI
         }
     }
 
-    nextTetrino(current_grid, grid, score);
+    next_tetromino(current_grid, grid, score);
 }
 
 void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
 {
-    SDL_Surface *a_block = NULL;
-    SDL_Surface *b_block = NULL;
-    // rename background
-    SDL_Surface *background_block = NULL;
+    SDL_Surface *a_block, *b_block, *background;
     SDL_Rect position;
-    struct color first_color, second_color;
-    int x, y;
+    Color_t first_color, second_color;
 
     // load_colors_from_config
     load_colors(&first_color, &second_color);
 
-    background_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(background_block, NULL, SDL_MapRGB(background_block->format, 0, 0, 0));
+    background = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+    SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
 
     a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
     SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, first_color.r, first_color.g, first_color.b));
@@ -129,8 +125,8 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
     SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, second_color.r, second_color.g, second_color.b));
 
 
-    for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-        for (y = 2; y < VERTICAL_BLOCK_NB; y++) {
+    for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+        for (int y = 2; y < VERTICAL_BLOCK_NB; y++) {
             position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
             position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
@@ -138,17 +134,15 @@ void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], blo
                 SDL_BlitSurface(a_block, NULL, screen, &position);
             } else if (current_grid[x][y] == CURRENT) {
                 SDL_BlitSurface(b_block, NULL, screen, &position);
-            } else if (current_grid[x][y] == MATRIX_FILL) {
-                // SDL_BlitSurface(purple_block, NULL, screen, &position);
             } else {
-                SDL_BlitSurface(background_block, NULL, screen, &position);
+                SDL_BlitSurface(background, NULL, screen, &position);
             }
         }
     }
 
     SDL_FreeSurface(a_block);
     SDL_FreeSurface(b_block);
-    SDL_FreeSurface(background_block);
+    SDL_FreeSurface(background);
 }
 
 
@@ -181,30 +175,27 @@ void draw_game_set(SDL_Surface *screen, int score, int high_score, int level)
 
 void draw_game_borders(SDL_Surface *screen)
 {
-    pixel pixel_white;
-    pixel_white.r = (Uint8) 0xff;
-    pixel_white.g = (Uint8) 0xff;
-    pixel_white.b = (Uint8) 0xff;
-    pixel_white.alpha = (Uint8) 128;
-    int x, y;
+    Pixel_t white_pixel;
+    white_pixel.r = white_pixel.g = white_pixel.b = (Uint8) 0xff;
+    white_pixel.alpha = (Uint8) 128;
 
     SDL_LockSurface(screen);
 
-    for (y = 0; y < WINDOW_HEIGHT; y++) {
-        for (x = 0; x < WINDOW_WIDTH; x++) {
+    for (int y = 0; y < WINDOW_HEIGHT; y++) {
+        for (int x = 0; x < WINDOW_WIDTH; x++) {
             // top border
             if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH) {
-                put_pixel(screen, x, y, &pixel_white);
+                put_pixel(screen, x, y, &white_pixel);
             }
             // bottom border
             if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH) {
-                put_pixel(screen, x, y, &pixel_white);
+                put_pixel(screen, x, y, &white_pixel);
             }
 
             // left and right borders
             if (x < GAME_BORDER_WIDTH) {
-                put_pixel(screen, x, y, &pixel_white);
-                put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &pixel_white);
+                put_pixel(screen, x, y, &white_pixel);
+                put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &white_pixel);
             }
         }
     }
@@ -212,7 +203,7 @@ void draw_game_borders(SDL_Surface *screen)
     SDL_UnlockSurface(screen);
 }
 
-void put_pixel(SDL_Surface* screen, int x, int y, pixel* p)
+void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p)
 {
     Uint32* p_screen = (Uint32*) screen->pixels;
     p_screen += y*screen->w+x;

@@ -17,18 +17,22 @@
     #define CONFIGURE_OPTION  1
 
 typedef enum {EMPTY = 0, BLOCK = 1, CURRENT = 2, MATRIX_FILL = 3, BORDER_BLOCK = 4} block;
+
 typedef struct {
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
 	uint8_t alpha;
-} pixel;
+} Pixel_t;
 
-// rename color > s_color et color > t_color
-typedef struct color
+typedef struct {
+    int block[4][4];
+} Tetromino_t;
+
+typedef struct
 {
     int r;
     int g;
     int b;
-} color;
+} Color_t;
 #endif

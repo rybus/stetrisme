@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "colors.h"
 
-void load_colors(struct color *a, struct color *b)
+void load_colors(Color_t *a, Color_t *b)
 {
   char *config_file_name = "config.txt";
   config_t cfg;
@@ -41,7 +41,7 @@ void load_colors(struct color *a, struct color *b)
 	config_destroy(&cfg);
 }
 
-void save_colors(struct color a, struct color b)
+void save_colors(Color_t a, Color_t b)
 {
   char *config_file_name = "config.txt";
   config_t cfg;

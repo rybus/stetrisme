@@ -7,63 +7,76 @@
 #include "block_creations.h"
 #include "score.h"
 
-void get_next_tetrimino(int tetrino[][4])
+Tetromino_t get_next_tetromino(void)
 {
-	int tetrimino[7][4][4] = {
+	Tetromino_t tetromino = { .block = {{2, 2, 2, 2},
+		 {1, 1, 1, 1},
+		 {2, 2, 2, 2},
+		 {2, 2, 2, 2}}
+	 };
+
+	Tetromino_t tetrominos[7] = {
+		{ .block =
 		{{2, 2, 2, 2},
 		 {1, 1, 1, 1},
 		 {2, 2, 2, 2},
-		 {2, 2, 2, 2}},
+		 {2, 2, 2, 2}}},
 
+		{ .block =
 		{{2, 1, 1, 0},
 		 {2, 1, 1, 0},
 		 {2, 2, 2, 0},
-		 {0, 0, 0, 0}},
+		 {0, 0, 0, 0}}},
 
+		{ .block =
 		{{2, 1, 2, 0},
 		 {1, 1, 1, 0},
 		 {2, 2, 2, 0},
-		 {0, 0, 0, 0}},
+		 {0, 0, 0, 0}}},
 
+		{ .block =
 		{{2, 2, 1, 0},
 		 {1, 1, 1, 0},
 		 {2, 2, 2, 0},
-		 {0, 0, 0, 0}},
+		 {0, 0, 0, 0}}},
 
+		{ .block =
 		{{1, 2, 2, 0},
 		 {1, 1, 1, 0},
 		 {2, 2, 2, 0},
-		 {0, 0, 0, 0}},
+		 {0, 0, 0, 0}}},
 
+		{ .block =
 		{{1, 1, 2, 0},
 		 {2, 1, 1, 0},
 		 {2, 2, 2, 0},
-		 {0, 0, 0, 0}},
+		 {0, 0, 0, 0}}},
 
+		{ .block =
 		{{2, 1, 1, 0},
 		 {1, 1, 2, 0},
 		 {2, 2, 2, 0},
-		 {0, 0, 0, 0}}
+		 {0, 0, 0, 0}}}
 	};
 
 	srand(time(NULL));
-	int tetrimino_number = rand() % 7;
+	int tetromino_number = rand() % 7;
 
-	int i, j;
-
-	for (i = 0; i < 4; i++) {
-		for (j = 0; j < 4; j++) {
-			tetrino[i][j] = tetrimino[tetrimino_number][i][j];
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			tetromino.block[i][j] = tetrominos[tetromino_number].block[i][j];
 		}
 	}
+
+	return tetromino;
 }
 
-int nextTetrino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
+int next_tetromino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
 {
-	int tetrino[4][4];
-	int x, y;
-	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
-		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+	Tetromino_t tetromino;
+
+	for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (current_grid[x][y] == CURRENT) {
 				grid[x][y] = BLOCK;
 			}
@@ -71,28 +84,26 @@ int nextTetrino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_B
 		}
 	}
 
-	removeFullLines(grid, score);
+	remove_full_lines(grid, score);
+	tetromino = get_next_tetromino();
 
-	get_next_tetrimino(tetrino);
-
-	for(x = (HORIZONTAL_BLOCK_NB/2); x < (HORIZONTAL_BLOCK_NB/2)+4; x++) {
-		for (y = 0; y < 4; y++) {
-			if (tetrino[x - (HORIZONTAL_BLOCK_NB/2)][y] == 1 && grid[x][y] == BLOCK) {
+	for(int x = (HORIZONTAL_BLOCK_NB/2); x < (HORIZONTAL_BLOCK_NB/2)+4; x++) {
+		for (int y = 0; y < 4; y++) {
+			if (tetromino.block[x - (HORIZONTAL_BLOCK_NB/2)][y] == 1 && grid[x][y] == BLOCK)
 				return 0;
-			}
-			if (tetrino[x - (HORIZONTAL_BLOCK_NB/2)][y] == 1) {
+
+			if (tetromino.block[x - (HORIZONTAL_BLOCK_NB/2)][y] == 1)
 				current_grid[x][y] = CURRENT;
-			}
-			if (tetrino[x - (HORIZONTAL_BLOCK_NB/2)][y] == 2) {
+
+			if (tetromino.block[x - (HORIZONTAL_BLOCK_NB/2)][y] == 2)
 				current_grid[x][y] = MATRIX_FILL;
-			}
 		}
 	}
 
 	return 1;
 }
 
-void removeFullLines(block grid[][VERTICAL_BLOCK_NB], int * score)
+void remove_full_lines(block grid[][VERTICAL_BLOCK_NB], int * score)
 {
 	int x, y;
 
