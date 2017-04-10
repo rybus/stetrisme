@@ -29,10 +29,16 @@ typedef struct {
     int block[4][4];
 } Tetromino_t;
 
-typedef struct
-{
+typedef struct {
     int r;
     int g;
     int b;
 } Color_t;
+
+typedef struct {
+   int high_score;
+   Color_t left_eye_color;
+   Color_t right_eye_color;
+} Config_t;
+
 #endif

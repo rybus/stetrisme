@@ -5,35 +5,38 @@
 #include <SDL/SDL_ttf.h>
 #include <string.h>
 #include <errno.h>
-#include <libconfig.h>
 
 #include "constants.h"
-#include "colors.h"
+#include "config.h"
 #include "configure.h"
 #include "events.h"
 #include "play.h"
 
+Config_t config;
+int currentPosition;
+
 void configure(SDL_Surface *screen)
 {
-  struct color firstColor, secondColor, *firstColorPtr, *secondColorPtr;
-  firstColorPtr = &firstColor;
-  secondColorPtr = &secondColor;
-
+  Color_t *left_eye_color_ptr, *right_eye_color_ptr;
   int *selectors[6];
-  int currentPosition;
+
   Input in;
 
   memset(&in, 0, sizeof(in));
-  load_colors(firstColorPtr, secondColorPtr);
+  config = load_config();
+
+  left_eye_color_ptr = &config.left_eye_color;
+  right_eye_color_ptr = &config.right_eye_color;
+
   erase_surface(screen);
   currentPosition = 0;
 
-  selectors[0] = &(*firstColorPtr).r;
-  selectors[1] = &(*firstColorPtr).g;
-  selectors[2] = &(*firstColorPtr).b;
-  selectors[3] = &(*secondColorPtr).r;
-  selectors[4] = &(*secondColorPtr).g;
-  selectors[5] = &(*secondColorPtr).b;
+  selectors[0] = &(*left_eye_color_ptr).r;
+  selectors[1] = &(*left_eye_color_ptr).g;
+  selectors[2] = &(*left_eye_color_ptr).b;
+  selectors[3] = &(*right_eye_color_ptr).r;
+  selectors[4] = &(*right_eye_color_ptr).g;
+  selectors[5] = &(*right_eye_color_ptr).b;
 
   while(!in.key[SDLK_ESCAPE])
   {
@@ -59,14 +62,14 @@ void configure(SDL_Surface *screen)
           in.key[SDLK_DOWN] = 0;
       }
 
-      draw_color_selector(screen, firstColor, secondColor, currentPosition);
+      draw_color_selector(screen);
       SDL_Flip(screen);
-      save_colors(firstColor, secondColor);
+      // save_colors(firstColor, secondColor);
     }
 
 }
 
-void draw_color_selector(SDL_Surface *screen, struct color firstColor, struct color secondColor, int currentPosition)
+void draw_color_selector(SDL_Surface *screen)
 {
     SDL_Rect position;
     SDL_Surface *a_block = NULL;
@@ -76,10 +79,10 @@ void draw_color_selector(SDL_Surface *screen, struct color firstColor, struct co
     position.y = WINDOW_HEIGHT - 100;
 
     a_block = SDL_CreateRGBSurface(0, 100, WINDOW_WIDTH/2, 32, 0, 0, 0, 0);
-    SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, firstColor.r, firstColor.g, firstColor.b));
+    SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, config.left_eye_color.r, config.left_eye_color.g, config.left_eye_color.b));
 
     b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, secondColor.r, secondColor.g, secondColor.b));
+    SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, config.right_eye_color.r, config.right_eye_color.g, config.right_eye_color.b));
 
     SDL_BlitSurface(a_block, NULL, screen, &position);
 

@@ -13,28 +13,38 @@
 #include "block_rotations.h"
 #include "play.h"
 #include "score.h"
-#include "colors.h"
+#include "config.h"
 #include "events.h"
+
+Config_t config;
+Input in;
+block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+SDL_Surface *a_block, *b_block, *background;
+
+int score, level, current_time, previous_time;
 
 void play(SDL_Surface *screen)
 {
-    int score = 0;
-    int high_score = 0;
-    int level = 1;
-    int current_time  = 0;
-    int previous_time = 0;
-    Input in;
-    SDL_Surface *play_surface = NULL;
-    high_score = load_high_score();
+    score = current_time = previous_time = 0;
+    level = 1;
+
+    config = load_config();
+
+    background = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+    SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
+
+    a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+    SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, config.left_eye_color.r, config.left_eye_color.g, config.left_eye_color.b));
+
+    b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+    SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, config.right_eye_color.r, config.right_eye_color.g, config.right_eye_color.b));
 
     memset(&in, 0, sizeof(in));
-    block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
-    block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 
-    initialize_game(current_grid, grid, &score);
+    initialize_game();
 
-    while(!in.key[SDLK_ESCAPE])
-    {
+    while(!in.key[SDLK_ESCAPE]) {
         UpdateEvents(&in);
         if (in.key[SDLK_LEFT]) {
             moveLeft(current_grid, grid);
@@ -64,20 +74,23 @@ void play(SDL_Surface *screen)
         }
 
         current_time = SDL_GetTicks();
-        if (current_time - previous_time > 500)
-        {
+        if (current_time - previous_time > 500) {
             moveDown(current_grid, grid, &score);
             previous_time = current_time;
         }
 
-        if (score > high_score) {
+        if (score > config.high_score) {
         //    refresh_high_score(screen, score);
         }
 
-        draw_game_set(screen, score, high_score, level);
-        draw_game(screen, current_grid, grid);
-        SDL_Flip(screen);
+
+        draw_game(screen);
     }
+
+    SDL_FreeSurface(a_block);
+    SDL_FreeSurface(b_block);
+    SDL_FreeSurface(background);
+    SDL_Flip(screen);
 }
 
 // void refresh_high_score(SDL_Surface *screen, int score)
@@ -89,70 +102,22 @@ void play(SDL_Surface *screen)
 //     SDL_BlitSurface(score, NULL, screen, &position);
 // }
 
-void initialize_game(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
+void initialize_game()
 {
-    int x, y;
-    for(x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
-        for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
-            if (x >= EXTRA_BLOCKS && x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS) {
-                grid[x][y] = EMPTY;
-            } else {
-                grid[x][y] = BORDER_BLOCK;
-            }
+    for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
+        for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
             current_grid[x][y] = EMPTY;
+            if (x >= EXTRA_BLOCKS && x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS)
+                grid[x][y] = EMPTY;
+            else
+                grid[x][y] = BORDER_BLOCK;
         }
     }
 
-    next_tetromino(current_grid, grid, score);
+    next_tetromino(current_grid, grid, &score);
 }
 
-void draw_game(SDL_Surface *screen, block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
-{
-    SDL_Surface *a_block, *b_block, *background;
-    SDL_Rect position;
-    Color_t first_color, second_color;
-
-    // load_colors_from_config
-    load_colors(&first_color, &second_color);
-
-    background = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
-
-    a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, first_color.r, first_color.g, first_color.b));
-
-    b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, second_color.r, second_color.g, second_color.b));
-
-
-    for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-        for (int y = 2; y < VERTICAL_BLOCK_NB; y++) {
-            position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
-            position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
-
-            if(grid[x][y] == BLOCK) {
-                SDL_BlitSurface(a_block, NULL, screen, &position);
-            } else if (current_grid[x][y] == CURRENT) {
-                SDL_BlitSurface(b_block, NULL, screen, &position);
-            } else {
-                SDL_BlitSurface(background, NULL, screen, &position);
-            }
-        }
-    }
-
-    SDL_FreeSurface(a_block);
-    SDL_FreeSurface(b_block);
-    SDL_FreeSurface(background);
-}
-
-
-/*
-* Draws game set
-*
-* @param int score     current score
-* @param int level     current level
-*/
-void draw_game_set(SDL_Surface *screen, int score, int high_score, int level)
+void draw_game(SDL_Surface *screen)
 {
     SDL_Rect position;
     char score_label_text[6]          = "score";
@@ -166,13 +131,32 @@ void draw_game_set(SDL_Surface *screen, int score, int high_score, int level)
     position.y = 70;
     print_integer_informations(screen, score_label_text, score, &position);
 
-    position.y = position.y + 80;
-    print_integer_informations(screen, maximum_score_label_text, high_score, &position);
-    position.y = position.y + 80;
+    position.y += 80;
+    print_integer_informations(screen, maximum_score_label_text, config.high_score, &position);
+    position.y += 80;
     print_integer_informations(screen, current_level_label_text, level, &position);
 
+    draw_tetrominos(screen);
 }
 
+void draw_tetrominos(SDL_Surface *screen)
+{
+    SDL_Rect position;
+    for (int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+        for (int y = 2; y < VERTICAL_BLOCK_NB; y++) {
+            position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
+            position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
+
+            if(grid[x][y] == BLOCK) {
+                SDL_BlitSurface(a_block, NULL, screen, &position);
+            } else if (current_grid[x][y] == CURRENT) {
+                SDL_BlitSurface(b_block, NULL, screen, &position);
+            } else {
+                SDL_BlitSurface(background, NULL, screen, &position);
+            }
+        }
+    }
+}
 void draw_game_borders(SDL_Surface *screen)
 {
     Pixel_t white_pixel;
@@ -219,13 +203,11 @@ void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p)
 */
 void print_integer_informations(SDL_Surface *screen, char *label, int number, SDL_Rect *position)
 {
-    TTF_Font *label_font   = NULL;
-    TTF_Font *regular_font = NULL;
+    TTF_Font *label_font, *regular_font;
     char number_text[10];
     SDL_Color white_color  = {255, 255, 255};
     SDL_Color fushia_color = {0, 152, 247};
-    SDL_Surface *label_surface  = NULL;
-    SDL_Surface *number_surface = NULL;
+    SDL_Surface *label_surface, *number_surface;
 
     sprintf(number_text, "%d", number);
     regular_font = TTF_OpenFont("resources/opensans.ttf", 20);
