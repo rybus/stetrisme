@@ -1,6 +1,3 @@
-max_score = 80;
-colors : 
-{
-  a = "255;0;0";
-  b = "0;0;131";
-};
+max_score 80
+left_eye_color 255;0;0
+right_eye_color 0;0;131

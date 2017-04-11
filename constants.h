@@ -13,12 +13,32 @@
     #define GAME_AREA_HEIGHT  BLOCK_SIZE * VERTICAL_BLOCK_NB + GAME_BORDER_WIDTH * 2
     #define WINDOW_WIDTH      GAME_AREA_WIDTH + GAME_BORDER_WIDTH*2 + GAME_INFOS_WIDTH
     #define WINDOW_HEIGHT     GAME_AREA_HEIGHT - (2 * BLOCK_SIZE)
+    #define PLAY_OPTION       0
+    #define CONFIGURE_OPTION  1
 
 typedef enum {EMPTY = 0, BLOCK = 1, CURRENT = 2, MATRIX_FILL = 3, BORDER_BLOCK = 4} block;
+
 typedef struct {
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
 	uint8_t alpha;
-} pixel;
+} Pixel_t;
+
+typedef struct {
+    int block[4][4];
+} Tetromino_t;
+
+typedef struct {
+    int r;
+    int g;
+    int b;
+} Color_t;
+
+typedef struct {
+   int high_score;
+   Color_t left_eye_color;
+   Color_t right_eye_color;
+} Config_t;
+
 #endif
