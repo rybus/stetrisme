@@ -79,7 +79,8 @@ void play(SDL_Surface *screen)
         }
 
         if (score > config.high_score) {
-        //    refresh_high_score(screen, score);
+          config.high_score = score;
+          save_config(config);
         }
 
         draw_game(screen);
@@ -91,15 +92,6 @@ void play(SDL_Surface *screen)
     SDL_FreeSurface(background);
 
 }
-
-// void refresh_high_score(SDL_Surface *screen, int score)
-// {
-//     update_high_score(score);
-//     SDL_Rect position;
-//
-//     position.y = 190;
-//     SDL_BlitSurface(score, NULL, screen, &position);
-// }
 
 void initialize_game()
 {
