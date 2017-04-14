@@ -28,4 +28,4 @@ $ ./stetrisme
 ```
 
 ### Settings
-Change the colors of the blocks from `config.txt` or via the *configure* menu. 
+Change the colors of the blocks from `config.txt` or via the *configure* menu.
