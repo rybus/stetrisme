@@ -66,8 +66,7 @@ void print_menu(SDL_Surface *screen, int selected_option)
     tetrisHome = IMG_Load("resources/pictures/tetris.png");
     right_arrow = IMG_Load("resources/pictures/right_arrow.png");
 
-    position.x = 0;
-    position.y = 0;
+    position.x = position.y = 0;
     SDL_BlitSurface(tetrisHome, NULL, screen, &position);
 
     position.x = 60;
@@ -100,7 +99,7 @@ void print_selected_option(int selected_option, SDL_Surface *screen, SDL_Surface
     position.x = 130;
     position.y = 255;
     if (selected_option == PLAY_OPTION)
-    {        
+    {
         SDL_BlitSurface(black_block, NULL, screen, &position);
         position.y = 205;
         SDL_BlitSurface(right_arrow, NULL, screen, &position);

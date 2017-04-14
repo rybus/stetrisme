@@ -1,7 +1,6 @@
 void play(SDL_Surface *screen);
 void print_integer_informations(SDL_Surface *screen, char *label, int number, SDL_Rect *position);
 void initialize_game();
-void refresh_high_score(SDL_Surface *screen);
 void draw_game(SDL_Surface *screen);
 void draw_game_borders(SDL_Surface *screen);
 void draw_tetrominos(SDL_Surface *screen);
