@@ -29,3 +29,8 @@ $ ./stetrisme
 
 ### Settings
 Change the colors of the blocks from `config.txt` or via the *configure* menu.
+
+### Resources
+- The C Programming Language (Second Edition)
+- [fr] https://openclassrooms.com/courses/simplifier-les-events-avec-sdl
+- [fr] https://openclassrooms.com/courses/apprenez-a-programmer-en-c/installation-de-la-sdl
