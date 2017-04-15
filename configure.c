@@ -73,7 +73,7 @@ void configure(SDL_Surface *screen)
         draw_color_selector(screen);
         SDL_Flip(screen);
     }
-    
+
     save_config(config);
 }
 
@@ -83,10 +83,10 @@ void draw_color_selector(SDL_Surface *screen)
     SDL_Surface *a_block, *b_block, *left_eye_color, *right_eye_color;
     SDL_Color white_color  = {255, 255, 255};
 
-    char left_eye_color_txt[12], right_eye_color_txt[12];
+    char left_eye_color_txt[18], right_eye_color_txt[18];
 
-    sprintf(left_eye_color_txt, "r:%d g:%d b: %d", config.left_eye_color.r, config.left_eye_color.g, config.left_eye_color.b);
-    sprintf(right_eye_color_txt, "r:%d g:%d b: %d", config.right_eye_color.r, config.right_eye_color.g, config.right_eye_color.b);
+    sprintf(left_eye_color_txt, "r:%d g:%d b:%d", config.left_eye_color.r, config.left_eye_color.g, config.left_eye_color.b);
+    sprintf(right_eye_color_txt, "r:%d g:%d b:%d", config.right_eye_color.r, config.right_eye_color.g, config.right_eye_color.b);
 
     position.x = 170;
     position.y = 100;
