@@ -90,7 +90,6 @@ void play(SDL_Surface *screen)
     SDL_FreeSurface(a_block);
     SDL_FreeSurface(b_block);
     SDL_FreeSurface(background);
-
 }
 
 void initialize_game()
@@ -138,13 +137,12 @@ void draw_tetrominos(SDL_Surface *screen)
             position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
             position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-            if(grid[x][y] == BLOCK) {
+            if(grid[x][y] == BLOCK)
                 SDL_BlitSurface(a_block, NULL, screen, &position);
-            } else if (current_grid[x][y] == CURRENT) {
+            else if (current_grid[x][y] == CURRENT)
                 SDL_BlitSurface(b_block, NULL, screen, &position);
-            } else {
+            else
                 SDL_BlitSurface(background, NULL, screen, &position);
-            }
         }
     }
 }
@@ -159,13 +157,12 @@ void draw_game_borders(SDL_Surface *screen)
     for (int y = 0; y < WINDOW_HEIGHT; y++) {
         for (int x = 0; x < WINDOW_WIDTH; x++) {
             // top border
-            if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH) {
+            if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH)
                 put_pixel(screen, x, y, &white_pixel);
-            }
+
             // bottom border
-            if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH) {
+            if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH)
                 put_pixel(screen, x, y, &white_pixel);
-            }
 
             // left and right borders
             if (x < GAME_BORDER_WIDTH) {
@@ -178,6 +175,9 @@ void draw_game_borders(SDL_Surface *screen)
     SDL_UnlockSurface(screen);
 }
 
+/**
+ * Draws a signel Pixel_t on the screen at the (x, y) position.
+ */
 void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p)
 {
     Uint32* p_screen = (Uint32*) screen->pixels;

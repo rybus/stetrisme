@@ -62,9 +62,8 @@ Tetromino_t get_next_tetromino(void)
 	int tetromino_number = rand() % 7;
 
 	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < 4; j++)
 			tetromino.block[i][j] = tetrominos[tetromino_number].block[i][j];
-		}
 	}
 
 	return tetromino;
@@ -76,9 +75,8 @@ int next_tetromino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 
 	for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
 		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
-			if (current_grid[x][y] == CURRENT) {
+			if (current_grid[x][y] == CURRENT)
 				grid[x][y] = BLOCK;
-			}
 			current_grid[x][y] = EMPTY;
 		}
 	}
@@ -104,9 +102,7 @@ int next_tetromino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 
 void remove_full_lines(block grid[][VERTICAL_BLOCK_NB], int * score)
 {
-	int x, y;
-
-	for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+	for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 		if (isLineFull(grid, y)) {
 			shiftGrid(grid, y);
 			*score = *score + 10;
@@ -116,11 +112,9 @@ void remove_full_lines(block grid[][VERTICAL_BLOCK_NB], int * score)
 
 int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
-    int x;
-	for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-		if (grid[x][line_number] == EMPTY) {
+	for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+		if (grid[x][line_number] == EMPTY)
 			return 0;
-		}
 	}
 
 	return 1;
@@ -128,14 +122,12 @@ int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)
 
 void shiftGrid(block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
-    int x, y;
-	for (y = line_number; y >= 0; y--) {
-		for(x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-			if (y == 0) {
+	for (int y = line_number; y >= 0; y--) {
+		for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+			if (y == 0)
 				grid[x][0] = EMPTY;
-			} else {
+			else
 				grid[x][y] = grid[x][y - 1];
-			}
 		}
 	}
 }

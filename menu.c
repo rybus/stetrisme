@@ -32,13 +32,9 @@ int menu(SDL_Surface *screen)
         if (in.key[SDLK_RETURN])
         {
             if (selected_option == PLAY_OPTION)
-            {
                 play(screen);
-            }
             else
-            {
                 configure(screen);
-            }
             in.key[SDLK_RETURN] = 0;
         }
         SDL_Flip(screen);
