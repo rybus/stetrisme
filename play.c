@@ -64,7 +64,8 @@ void play(SDL_Surface *screen)
             in.key[SDLK_q] = 0;
         }
         if (in.key[SDLK_SPACE]) {
-            moveFullDown(current_grid, grid, &score);
+            if (!moveFullDown(current_grid, grid, &score))
+                in.key[SDLK_ESCAPE] = 1;
             in.key[SDLK_SPACE] = 0;
         }
         if (in.key[SDLK_s]) {
@@ -74,7 +75,8 @@ void play(SDL_Surface *screen)
 
         current_time = SDL_GetTicks();
         if (current_time - previous_time > 500) {
-            moveDown(current_grid, grid, &score);
+            if (!moveDown(current_grid, grid, &score))
+                in.key[SDLK_ESCAPE] = 1;
             previous_time = current_time;
         }
 
