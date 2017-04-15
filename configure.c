@@ -73,7 +73,7 @@ void configure(SDL_Surface *screen)
         draw_color_selector(screen);
         SDL_Flip(screen);
     }
-    
+
     save_config(config);
 }
 
@@ -83,16 +83,36 @@ void draw_color_selector(SDL_Surface *screen)
     SDL_Surface *a_block, *b_block, *left_eye_color, *right_eye_color;
     SDL_Color white_color  = {255, 255, 255};
 
-    char left_eye_color_txt[12], right_eye_color_txt[12];
+    char left_eye_color_txt[18], right_eye_color_txt[18];
 
-    sprintf(left_eye_color_txt, "r:%d g:%d b: %d", config.left_eye_color.r, config.left_eye_color.g, config.left_eye_color.b);
-    sprintf(right_eye_color_txt, "r:%d g:%d b: %d", config.right_eye_color.r, config.right_eye_color.g, config.right_eye_color.b);
+    sprintf(
+        left_eye_color_txt,
+        "r:%d g:%d b:%d",
+        config.left_eye_color.r,
+        config.left_eye_color.g,
+        config.left_eye_color.b
+    );
+    sprintf(
+        right_eye_color_txt,
+        "r:%d g:%d b:%d",
+        config.right_eye_color.r,
+        config.right_eye_color.g,
+        config.right_eye_color.b
+    );
 
     position.x = 170;
     position.y = 100;
 
-    left_eye_color = TTF_RenderText_Blended(font, left_eye_color_txt, white_color);
-    right_eye_color = TTF_RenderText_Blended(font, right_eye_color_txt, white_color);
+    left_eye_color = TTF_RenderText_Blended(
+        font,
+        left_eye_color_txt,
+        white_color
+    );
+    right_eye_color = TTF_RenderText_Blended(
+        font,
+        right_eye_color_txt,
+        white_color
+    );
     position.x = 100;
     position.y = 200;
 
@@ -104,10 +124,28 @@ void draw_color_selector(SDL_Surface *screen)
     position.y = WINDOW_HEIGHT - 200;
 
     a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE*4, BLOCK_SIZE*4, 32, 0, 0, 0, 0);
-    SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, config.left_eye_color.r, config.left_eye_color.g, config.left_eye_color.b));
+    SDL_FillRect(
+        a_block,
+        NULL,
+        SDL_MapRGB(
+            a_block->format,
+            config.left_eye_color.r,
+            config.left_eye_color.g,
+            config.left_eye_color.b
+        )
+    );
 
     b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE*4, BLOCK_SIZE*4, 32, 0, 0, 0, 0);
-    SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, config.right_eye_color.r, config.right_eye_color.g, config.right_eye_color.b));
+    SDL_FillRect(
+        b_block,
+        NULL,
+        SDL_MapRGB(
+            b_block->format,
+            config.right_eye_color.r,
+            config.right_eye_color.g,
+            config.right_eye_color.b
+        )
+    );
 
     SDL_BlitSurface(a_block, NULL, screen, &position);
 

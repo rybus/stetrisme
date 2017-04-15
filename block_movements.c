@@ -7,14 +7,11 @@
 
 int isDownMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
 {
-	int x, y;
-
-	for(x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
-		for (y = 0; y < VERTICAL_BLOCK_NB; y++) {
+	for (int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
+		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 			if (current_grid[x][y] == CURRENT) {
-				if (y == VERTICAL_BLOCK_NB - 1 || grid[x][y + 1] == BLOCK) {
+				if (y == VERTICAL_BLOCK_NB - 1 || grid[x][y + 1] == BLOCK)
 					return 0;
-				}
 			}
 		}
 	}
@@ -91,12 +88,10 @@ int isRightMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 {
 	for(int x = EXTRA_BLOCKS - 1; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
-			if (x == (HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1) && (current_grid[HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1][y] == CURRENT)) {
+			if (x == (HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1) && (current_grid[HORIZONTAL_BLOCK_NB  + EXTRA_BLOCKS - 1][y] == CURRENT))
 				return 0;
-			}
-			if (current_grid[x][y] == CURRENT && (x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS - 1) && grid[x + 1][y] == BLOCK) {
+			if (current_grid[x][y] == CURRENT && (x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS - 1) && grid[x + 1][y] == BLOCK)
 				return 0;
-			}
 		}
 	}
 
