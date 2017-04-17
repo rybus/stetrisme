@@ -34,10 +34,26 @@ void play(SDL_Surface *screen)
     SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
 
     a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(a_block, NULL, SDL_MapRGB(a_block->format, config.left_eye_color.r, config.left_eye_color.g, config.left_eye_color.b));
+    SDL_FillRect(a_block,
+        NULL,
+        SDL_MapRGB(
+            a_block->format,
+            config.left_eye_color.r,
+            config.left_eye_color.g,
+            config.left_eye_color.b
+        )
+    );
 
     b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(b_block, NULL, SDL_MapRGB(b_block->format, config.right_eye_color.r, config.right_eye_color.g, config.right_eye_color.b));
+    SDL_FillRect(b_block,
+        NULL,
+        SDL_MapRGB(
+            b_block->format,
+            config.right_eye_color.r,
+            config.right_eye_color.g,
+            config.right_eye_color.b
+        )
+    );
 
     memset(&in, 0, sizeof(in));
 

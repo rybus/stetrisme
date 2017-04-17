@@ -154,4 +154,6 @@ void draw_color_selector(SDL_Surface *screen)
 
     SDL_FreeSurface(a_block);
     SDL_FreeSurface(b_block);
+    SDL_FreeSurface(right_eye_color);
+    SDL_FreeSurface(left_eye_color);
 }
