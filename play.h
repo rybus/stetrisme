@@ -6,3 +6,4 @@ void draw_game_borders(SDL_Surface *screen);
 void draw_tetrominos(SDL_Surface *screen);
 void erase_surface(SDL_Surface *screen);
 void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p);
+int get_speed(int level);

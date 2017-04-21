@@ -5,10 +5,12 @@
 #define DEF_CONSTANTS
     #define BLOCK_SIZE          30
     #define HORIZONTAL_BLOCK_NB 10
-    #define VERTICAL_BLOCK_NB   22
-    #define ONE_LINE_FACTOR 40
-    #define TWO_LINES_FACTOR 100
-    #define THREE_LINES_FACTOR 300
+    #define VERTICAL_BLOCK_NB   24
+    #define LINES_PER_LEVEL     10
+    #define DEFAULT_SPEED_MS    500
+    #define ONE_LINE_FACTOR     40
+    #define TWO_LINES_FACTOR    100
+    #define THREE_LINES_FACTOR  300
     #define FOUR_LINES_FACTOR 1200
     #define GAME_BORDER_WIDTH 2
     #define EXTRA_BLOCKS      2 // Extra blocks on left/right to virtually keep MATRIX_FILL blocks

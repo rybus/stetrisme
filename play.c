@@ -21,12 +21,11 @@ Block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 Block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 SDL_Surface *a_block, *b_block, *background;
 
-int score, level, current_time, previous_time;
+int score, level, clear_lines, current_time, previous_time, cleared_lines;
 
 void play(SDL_Surface *screen)
 {
-    score = current_time = previous_time = 0;
-    level = 1;
+    score = current_time = previous_time = cleared_lines = level = 0;
 
     config = load_config();
 
@@ -70,7 +69,7 @@ void play(SDL_Surface *screen)
             in.key[SDLK_RIGHT] = 0;
         }
         if (in.key[SDLK_DOWN]) {
-            if(moveDown(current_grid, grid, &score, &level) == 0) {
+            if(moveDown(current_grid, grid, &score, &level, &cleared_lines) == 0) {
                 in.key[SDLK_ESCAPE] = 1;
             }
             in.key[SDLK_DOWN] = 0;
@@ -80,7 +79,7 @@ void play(SDL_Surface *screen)
             in.key[SDLK_q] = 0;
         }
         if (in.key[SDLK_SPACE]) {
-            if (!moveFullDown(current_grid, grid, &score, &level))
+            if (!moveFullDown(current_grid, grid, &score, &level, &cleared_lines))
                 in.key[SDLK_ESCAPE] = 1;
             in.key[SDLK_SPACE] = 0;
         }
@@ -90,8 +89,8 @@ void play(SDL_Surface *screen)
         }
 
         current_time = SDL_GetTicks();
-        if (current_time - previous_time > 500) {
-            if (!moveDown(current_grid, grid, &score, &level))
+        if (current_time - previous_time > get_speed(level)) {
+            if (!moveDown(current_grid, grid, &score, &level, &cleared_lines))
                 in.key[SDLK_ESCAPE] = 1;
             previous_time = current_time;
         }
@@ -110,6 +109,11 @@ void play(SDL_Surface *screen)
     SDL_FreeSurface(background);
 }
 
+int get_speed(int level)
+{
+  return DEFAULT_SPEED_MS - level*50;
+}
+
 void initialize_game()
 {
     for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
@@ -122,7 +126,7 @@ void initialize_game()
         }
     }
 
-    next_tetromino(current_grid, grid, &score, &level);
+    next_tetromino(current_grid, grid, &score, &level, &cleared_lines);
 }
 
 void draw_game(SDL_Surface *screen)

@@ -76,7 +76,7 @@ Tetromino_t get_next_tetromino(void)
 	return tetromino;
 }
 
-int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level)
+int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines)
 {
 	Tetromino_t tetromino;
 
@@ -88,7 +88,7 @@ int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICA
 		}
 	}
 
-	remove_full_lines(grid, score, level);
+	remove_full_lines(grid, score, level, cleared_lines);
 	tetromino = get_next_tetromino();
 
 	for(int x = (HORIZONTAL_BLOCK_NB/2); x < (HORIZONTAL_BLOCK_NB/2)+4; x++) {
@@ -107,7 +107,7 @@ int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICA
 	return 1;
 }
 
-void remove_full_lines(Block grid[][VERTICAL_BLOCK_NB], int * score, int * level)
+void remove_full_lines(Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines)
 {
 	int factor = 0;
 	for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
@@ -117,8 +117,12 @@ void remove_full_lines(Block grid[][VERTICAL_BLOCK_NB], int * score, int * level
 		}
 	}
 
+	*cleared_lines += factor;
+
 	if (factor > 0)
 		*score = *score + line_factors[factor]*(1 + *level);
+
+	*level = (*cleared_lines)/LINES_PER_LEVEL;
 }
 
 int isLineFull(Block grid[][VERTICAL_BLOCK_NB], int line_number)
