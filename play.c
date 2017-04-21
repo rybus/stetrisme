@@ -21,7 +21,8 @@ Block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 Block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 SDL_Surface *a_block, *b_block, *background;
 
-int score, level, clear_lines, current_time, previous_time, cleared_lines;
+int score, level, clear_lines, current_time, previous_time;
+int cleared_lines, next_tetromino_type;
 
 void play(SDL_Surface *screen)
 {
@@ -69,7 +70,7 @@ void play(SDL_Surface *screen)
             in.key[SDLK_RIGHT] = 0;
         }
         if (in.key[SDLK_DOWN]) {
-            if(moveDown(current_grid, grid, &score, &level, &cleared_lines) == 0) {
+            if(moveDown(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type) == 0) {
                 in.key[SDLK_ESCAPE] = 1;
             }
             in.key[SDLK_DOWN] = 0;
@@ -79,7 +80,7 @@ void play(SDL_Surface *screen)
             in.key[SDLK_q] = 0;
         }
         if (in.key[SDLK_SPACE]) {
-            if (!moveFullDown(current_grid, grid, &score, &level, &cleared_lines))
+            if (!moveFullDown(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type))
                 in.key[SDLK_ESCAPE] = 1;
             in.key[SDLK_SPACE] = 0;
         }
@@ -90,7 +91,7 @@ void play(SDL_Surface *screen)
 
         current_time = SDL_GetTicks();
         if (current_time - previous_time > get_speed(level)) {
-            if (!moveDown(current_grid, grid, &score, &level, &cleared_lines))
+            if (!moveDown(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type))
                 in.key[SDLK_ESCAPE] = 1;
             previous_time = current_time;
         }
@@ -126,7 +127,7 @@ void initialize_game()
         }
     }
 
-    next_tetromino(current_grid, grid, &score, &level, &cleared_lines);
+    next_tetromino(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type);
 }
 
 void draw_game(SDL_Surface *screen)
@@ -138,6 +139,7 @@ void draw_game(SDL_Surface *screen)
 
     erase_surface(screen);
     draw_game_borders(screen);
+    // draw_next_tetromino()
 
     position.x = GAME_AREA_WIDTH + 10;
     position.y = 70;

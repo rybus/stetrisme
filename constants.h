@@ -32,6 +32,7 @@ typedef struct {
 
 typedef struct {
     int block[4][4];
+    int next;
 } Tetromino_t;
 
 typedef struct {
