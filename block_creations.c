@@ -6,6 +6,13 @@
 #include "constants.h"
 #include "block_creations.h"
 
+int line_factors[4] = {
+	ONE_LINE_FACTOR,
+	TWO_LINES_FACTOR,
+	THREE_LINES_FACTOR,
+	FOUR_LINES_FACTOR
+};
+
 Tetromino_t get_next_tetromino(void)
 {
 	Tetromino_t tetromino = { .block = {{2, 2, 2, 2},
@@ -69,7 +76,7 @@ Tetromino_t get_next_tetromino(void)
 	return tetromino;
 }
 
-int next_tetromino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
+int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level)
 {
 	Tetromino_t tetromino;
 
@@ -81,7 +88,7 @@ int next_tetromino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 		}
 	}
 
-	remove_full_lines(grid, score);
+	remove_full_lines(grid, score, level);
 	tetromino = get_next_tetromino();
 
 	for(int x = (HORIZONTAL_BLOCK_NB/2); x < (HORIZONTAL_BLOCK_NB/2)+4; x++) {
@@ -100,17 +107,21 @@ int next_tetromino(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 	return 1;
 }
 
-void remove_full_lines(block grid[][VERTICAL_BLOCK_NB], int * score)
+void remove_full_lines(Block grid[][VERTICAL_BLOCK_NB], int * score, int * level)
 {
+	int factor = 0;
 	for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
 		if (isLineFull(grid, y)) {
 			shiftGrid(grid, y);
-			*score = *score + 10;
+			factor++;
 		}
 	}
+
+	if (factor > 0)
+		*score = *score + line_factors[factor]*(1 + *level);
 }
 
-int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)
+int isLineFull(Block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
 	for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		if (grid[x][line_number] == EMPTY)
@@ -120,7 +131,7 @@ int isLineFull(block grid[][VERTICAL_BLOCK_NB], int line_number)
 	return 1;
 }
 
-void shiftGrid(block grid[][VERTICAL_BLOCK_NB], int line_number)
+void shiftGrid(Block grid[][VERTICAL_BLOCK_NB], int line_number)
 {
 	for (int y = line_number; y >= 0; y--) {
 		for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {

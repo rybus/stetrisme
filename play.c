@@ -17,8 +17,8 @@
 
 Config_t config;
 Input in;
-block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
-block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+Block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
+Block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 SDL_Surface *a_block, *b_block, *background;
 
 int score, level, current_time, previous_time;
@@ -70,7 +70,7 @@ void play(SDL_Surface *screen)
             in.key[SDLK_RIGHT] = 0;
         }
         if (in.key[SDLK_DOWN]) {
-            if(moveDown(current_grid, grid, &score) == 0) {
+            if(moveDown(current_grid, grid, &score, &level) == 0) {
                 in.key[SDLK_ESCAPE] = 1;
             }
             in.key[SDLK_DOWN] = 0;
@@ -80,7 +80,7 @@ void play(SDL_Surface *screen)
             in.key[SDLK_q] = 0;
         }
         if (in.key[SDLK_SPACE]) {
-            if (!moveFullDown(current_grid, grid, &score))
+            if (!moveFullDown(current_grid, grid, &score, &level))
                 in.key[SDLK_ESCAPE] = 1;
             in.key[SDLK_SPACE] = 0;
         }
@@ -91,7 +91,7 @@ void play(SDL_Surface *screen)
 
         current_time = SDL_GetTicks();
         if (current_time - previous_time > 500) {
-            if (!moveDown(current_grid, grid, &score))
+            if (!moveDown(current_grid, grid, &score, &level))
                 in.key[SDLK_ESCAPE] = 1;
             previous_time = current_time;
         }
@@ -122,7 +122,7 @@ void initialize_game()
         }
     }
 
-    next_tetromino(current_grid, grid, &score);
+    next_tetromino(current_grid, grid, &score, &level);
 }
 
 void draw_game(SDL_Surface *screen)
