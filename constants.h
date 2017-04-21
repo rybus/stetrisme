@@ -5,7 +5,13 @@
 #define DEF_CONSTANTS
     #define BLOCK_SIZE          30
     #define HORIZONTAL_BLOCK_NB 10
-    #define VERTICAL_BLOCK_NB   22
+    #define VERTICAL_BLOCK_NB   24
+    #define LINES_PER_LEVEL     10
+    #define DEFAULT_SPEED_MS    500
+    #define ONE_LINE_FACTOR     40
+    #define TWO_LINES_FACTOR    100
+    #define THREE_LINES_FACTOR  300
+    #define FOUR_LINES_FACTOR 1200
     #define GAME_BORDER_WIDTH 2
     #define EXTRA_BLOCKS      2 // Extra blocks on left/right to virtually keep MATRIX_FILL blocks
     #define GAME_INFOS_WIDTH  200
@@ -16,8 +22,7 @@
     #define PLAY_OPTION       0
     #define CONFIGURE_OPTION  1
 
-typedef enum {EMPTY = 0, BLOCK = 1, CURRENT = 2, MATRIX_FILL = 3, BORDER_BLOCK = 4} block;
-
+typedef enum block {EMPTY = 0, BLOCK = 1, CURRENT = 2, MATRIX_FILL = 3, BORDER_BLOCK = 4} Block;
 typedef struct {
 	uint8_t r;
 	uint8_t g;

@@ -5,7 +5,7 @@
 #include "constants.h"
 #include "block_creations.h"
 
-int isDownMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
+int isDownMovable(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB])
 {
 	for (int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
 		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
@@ -19,7 +19,7 @@ int isDownMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL
 	return 1;
 }
 
-int moveDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
+int moveDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines)
 {
 	if (isDownMovable(current_grid, grid)) {
 		for(int x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
@@ -33,11 +33,11 @@ int moveDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOC
 
 		return 1;
 	} else
-		return next_tetromino(current_grid, grid, score);
+		return next_tetromino(current_grid, grid, score, level, cleared_lines);
 
 }
 
-int moveFullDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB], int * score)
+int moveFullDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines)
 {
 	while (isDownMovable(current_grid, grid)) {
 		for (int x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
@@ -50,10 +50,10 @@ int moveFullDown(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_
 		}
 	}
 
-	return next_tetromino(current_grid, grid, score);
+	return next_tetromino(current_grid, grid, score, level, cleared_lines);
 }
 
-int isLeftMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
+int isLeftMovable(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB])
 {
 	for(int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
@@ -69,7 +69,7 @@ int isLeftMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL
 	return 1;
 }
 
-void moveLeft(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
+void moveLeft(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB])
 {
 	if (isLeftMovable(current_grid, grid)) {
 		for (int x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
@@ -84,7 +84,7 @@ void moveLeft(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLO
 }
 
 
-int isRightMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
+int isRightMovable(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB])
 {
 	for(int x = EXTRA_BLOCKS - 1; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
 		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
@@ -98,7 +98,7 @@ int isRightMovable(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICA
 	return 1;
 }
 
-void moveRight(block current_grid[][VERTICAL_BLOCK_NB], block grid[][VERTICAL_BLOCK_NB])
+void moveRight(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB])
 {
 	if (isRightMovable(current_grid, grid)) {
 		for(int x = HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS - 1; x >= 0; x--) {
