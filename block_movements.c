@@ -31,7 +31,7 @@ int moveDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOC
 			}
 		}
 
-		return(1);
+		return 1;
 	} else
 		return next_tetromino(current_grid, grid, score, level, cleared_lines, next_tetromino_type);
 

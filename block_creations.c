@@ -13,7 +13,7 @@ int line_factors[4] = {
 	FOUR_LINES_FACTOR
 };
 
-Tetromino_t get_next_tetromino(int type_block)
+Tetromino_t get_tetromino(int type_block)
 {
 	Tetromino_t tetromino;
 
@@ -85,7 +85,7 @@ int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICA
 	}
 
 	remove_full_lines(grid, score, level, cleared_lines);
-	tetromino = get_next_tetromino(current_tetromino_type);
+	tetromino = get_tetromino(current_tetromino_type);
 
 	for(int x = (HORIZONTAL_BLOCK_NB/2); x < (HORIZONTAL_BLOCK_NB/2)+4; x++) {
 		for (int y = 0; y < 4; y++) {
