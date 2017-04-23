@@ -20,93 +20,100 @@ Input in;
 Block grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 Block current_grid[HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS][VERTICAL_BLOCK_NB];
 SDL_Surface *a_block, *b_block, *background;
+TTF_Font *opensans_30_font, *opensans_20_font;
+SDL_Color white_color  = {255, 255, 255};
 
-int score, level, clear_lines, current_time, previous_time, cleared_lines;
+int score, level, clear_lines, current_time, previous_time;
+int cleared_lines, next_tetromino_type;
 
 void play(SDL_Surface *screen)
 {
-    score = current_time = previous_time = cleared_lines = level = 0;
+  score = current_time = previous_time = cleared_lines = level = 0;
+  opensans_30_font = TTF_OpenFont("resources/opensans.ttf", 30);
+  opensans_20_font = TTF_OpenFont("resources/opensans.ttf", 20);
 
-    config = load_config();
+  config = load_config();
 
-    background = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
+  background = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+  SDL_FillRect(background, NULL, SDL_MapRGB(background->format, 0, 0, 0));
 
-    a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(a_block,
-        NULL,
-        SDL_MapRGB(
-            a_block->format,
-            config.left_eye_color.r,
-            config.left_eye_color.g,
-            config.left_eye_color.b
-        )
-    );
+  a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+  SDL_FillRect(a_block,
+    NULL,
+    SDL_MapRGB(
+      a_block->format,
+      config.left_eye_color.r,
+      config.left_eye_color.g,
+      config.left_eye_color.b
+    )
+  );
 
-    b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(b_block,
-        NULL,
-        SDL_MapRGB(
-            b_block->format,
-            config.right_eye_color.r,
-            config.right_eye_color.g,
-            config.right_eye_color.b
-        )
-    );
+  b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+  SDL_FillRect(b_block,
+    NULL,
+    SDL_MapRGB(
+      b_block->format,
+      config.right_eye_color.r,
+      config.right_eye_color.g,
+      config.right_eye_color.b
+    )
+  );
 
-    memset(&in, 0, sizeof(in));
+  memset(&in, 0, sizeof(in));
 
-    initialize_game();
+  initialize_game();
 
-    while(!in.key[SDLK_ESCAPE]) {
-        UpdateEvents(&in);
-        if (in.key[SDLK_LEFT]) {
-            moveLeft(current_grid, grid);
-            in.key[SDLK_LEFT] = 0;
-        }
-        if (in.key[SDLK_RIGHT]) {
-            moveRight(current_grid, grid);
-            in.key[SDLK_RIGHT] = 0;
-        }
-        if (in.key[SDLK_DOWN]) {
-            if(moveDown(current_grid, grid, &score, &level, &cleared_lines) == 0) {
-                in.key[SDLK_ESCAPE] = 1;
-            }
-            in.key[SDLK_DOWN] = 0;
-        }
-        if (in.key[SDLK_q]) {
-            rotateCounterClockWise(grid, current_grid);
-            in.key[SDLK_q] = 0;
-        }
-        if (in.key[SDLK_SPACE]) {
-            if (!moveFullDown(current_grid, grid, &score, &level, &cleared_lines))
-                in.key[SDLK_ESCAPE] = 1;
-            in.key[SDLK_SPACE] = 0;
-        }
-        if (in.key[SDLK_s]) {
-            rotateClockWise(grid, current_grid);
-            in.key[SDLK_s] = 0;
-        }
-
-        current_time = SDL_GetTicks();
-        if (current_time - previous_time > get_speed(level)) {
-            if (!moveDown(current_grid, grid, &score, &level, &cleared_lines))
-                in.key[SDLK_ESCAPE] = 1;
-            previous_time = current_time;
-        }
-
-        if (score > config.high_score) {
-          config.high_score = score;
-          save_config(config);
-        }
-
-        draw_game(screen);
-        SDL_Flip(screen);
+  while(!in.key[SDLK_ESCAPE]) {
+    UpdateEvents(&in);
+    if (in.key[SDLK_LEFT]) {
+      moveLeft(current_grid, grid);
+      in.key[SDLK_LEFT] = 0;
+    }
+    if (in.key[SDLK_RIGHT]) {
+      moveRight(current_grid, grid);
+      in.key[SDLK_RIGHT] = 0;
+    }
+    if (in.key[SDLK_DOWN]) {
+      if(moveDown(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type) == 0) {
+        in.key[SDLK_ESCAPE] = 1;
+      }
+      in.key[SDLK_DOWN] = 0;
+    }
+    if (in.key[SDLK_q]) {
+      rotateCounterClockWise(grid, current_grid);
+      in.key[SDLK_q] = 0;
+    }
+    if (in.key[SDLK_SPACE]) {
+      if (!moveFullDown(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type))
+      in.key[SDLK_ESCAPE] = 1;
+      in.key[SDLK_SPACE] = 0;
+    }
+    if (in.key[SDLK_s]) {
+      rotateClockWise(grid, current_grid);
+      in.key[SDLK_s] = 0;
     }
 
-    SDL_FreeSurface(a_block);
-    SDL_FreeSurface(b_block);
-    SDL_FreeSurface(background);
+    current_time = SDL_GetTicks();
+    if (current_time - previous_time > get_speed(level)) {
+      if (!moveDown(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type))
+      in.key[SDLK_ESCAPE] = 1;
+      previous_time = current_time;
+    }
+
+    if (score > config.high_score) {
+      config.high_score = score;
+      save_config(config);
+    }
+
+    draw_game(screen);
+    SDL_Flip(screen);
+  }
+
+  TTF_CloseFont(opensans_30_font);
+  TTF_CloseFont(opensans_20_font);
+  SDL_FreeSurface(a_block);
+  SDL_FreeSurface(b_block);
+  SDL_FreeSurface(background);
 }
 
 int get_speed(int level)
@@ -116,95 +123,122 @@ int get_speed(int level)
 
 void initialize_game()
 {
-    for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
-        for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
-            current_grid[x][y] = EMPTY;
-            if (x >= EXTRA_BLOCKS && x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS)
-                grid[x][y] = EMPTY;
-            else
-                grid[x][y] = BORDER_BLOCK;
-        }
+  for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2*EXTRA_BLOCKS; x++) {
+    for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
+      current_grid[x][y] = EMPTY;
+      if (x >= EXTRA_BLOCKS && x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS)
+      grid[x][y] = EMPTY;
+      else
+      grid[x][y] = BORDER_BLOCK;
     }
+  }
 
-    next_tetromino(current_grid, grid, &score, &level, &cleared_lines);
+  next_tetromino(current_grid, grid, &score, &level, &cleared_lines, &next_tetromino_type);
 }
 
 void draw_game(SDL_Surface *screen)
 {
+  SDL_Rect position;
+  char score_label_text[6]          = "score";
+  char maximum_score_label_text[11] = "max. score";
+  char current_level_label_text[6]  = "level";
+
+  erase_surface(screen);
+  draw_game_borders(screen);
+
+  position.x = GAME_AREA_WIDTH + 10;
+  position.y = 70;
+  print_positioned_game_information(screen, score_label_text, score, &position);
+
+  position.y += 80;
+  print_positioned_game_information(screen, maximum_score_label_text, config.high_score, &position);
+  position.y += 80;
+  print_positioned_game_information(screen, current_level_label_text, level, &position);
+
+  draw_tetrominos(screen);
+  draw_next_tetromino(screen);
+}
+
+void draw_next_tetromino(SDL_Surface *screen)
+{
+    Tetromino_t nextTromino = get_tetromino(next_tetromino_type);
+    char next_tetromino_text[5]  = "next";
+    SDL_Surface *next_tetromino_text_surface;
     SDL_Rect position;
-    char score_label_text[6]          = "score";
-    char maximum_score_label_text[11] = "max. score";
-    char current_level_label_text[6]  = "level";
 
-    erase_surface(screen);
-    draw_game_borders(screen);
-
+    position.y = 410;
     position.x = GAME_AREA_WIDTH + 10;
-    position.y = 70;
-    print_integer_informations(screen, score_label_text, score, &position);
+    next_tetromino_text_surface = TTF_RenderText_Blended(opensans_30_font, next_tetromino_text, white_color);
+    SDL_BlitSurface(next_tetromino_text_surface, NULL, screen, &position);
+    position.y += 50;
 
-    position.y += 80;
-    print_integer_informations(screen, maximum_score_label_text, config.high_score, &position);
-    position.y += 80;
-    print_integer_informations(screen, current_level_label_text, level, &position);
+    for (int y = 0; y < 4; y++) {
+      position.x = GAME_AREA_WIDTH + 10;
+      for (int x = 0; x < 4; x++) {
+        if (nextTromino.block[x][y] == 1)
+            SDL_BlitSurface(a_block, NULL, screen, &position);
+        position.x += BLOCK_SIZE;
+      }
+      position.y += BLOCK_SIZE;
+    }
 
-    draw_tetrominos(screen);
+    SDL_FreeSurface(next_tetromino_text_surface);
 }
 
 void draw_tetrominos(SDL_Surface *screen)
 {
-    SDL_Rect position;
-    for (int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
-        for (int y = 2; y < VERTICAL_BLOCK_NB; y++) {
-            position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
-            position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
+  SDL_Rect position;
+  for (int x = EXTRA_BLOCKS; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS; x++) {
+    for (int y = 2; y < VERTICAL_BLOCK_NB; y++) {
+      position.x = (x - EXTRA_BLOCKS) * BLOCK_SIZE + GAME_BORDER_WIDTH;
+      position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-            if(grid[x][y] == BLOCK)
-                SDL_BlitSurface(a_block, NULL, screen, &position);
-            else if (current_grid[x][y] == CURRENT)
-                SDL_BlitSurface(b_block, NULL, screen, &position);
-            else
-                SDL_BlitSurface(background, NULL, screen, &position);
-        }
+      if(grid[x][y] == BLOCK)
+        SDL_BlitSurface(a_block, NULL, screen, &position);
+      else if (current_grid[x][y] == CURRENT)
+        SDL_BlitSurface(b_block, NULL, screen, &position);
+      else
+        SDL_BlitSurface(background, NULL, screen, &position);
     }
+  }
 }
 void draw_game_borders(SDL_Surface *screen)
 {
-    Pixel_t white_pixel;
-    white_pixel.r = white_pixel.g = white_pixel.b = (Uint8) 0xff;
-    white_pixel.alpha = (Uint8) 128;
+  Pixel_t white_pixel;
+  white_pixel.r = white_pixel.g = white_pixel.b = (Uint8) 0xff;
+  white_pixel.alpha = (Uint8) 128;
 
-    SDL_LockSurface(screen);
+  SDL_LockSurface(screen);
 
-    for (int y = 0; y < WINDOW_HEIGHT; y++) {
-        for (int x = 0; x < WINDOW_WIDTH; x++) {
-            // top border
-            if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH)
-                put_pixel(screen, x, y, &white_pixel);
+  for (int y = 0; y < WINDOW_HEIGHT; y++) {
+    for (int x = 0; x < WINDOW_WIDTH; x++) {
+      // top border
+      if (y < GAME_BORDER_WIDTH && x < GAME_AREA_WIDTH)
+      put_pixel(screen, x, y, &white_pixel);
 
-            // bottom border
-            if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH)
-                put_pixel(screen, x, y, &white_pixel);
+      // bottom border
+      if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH)
+      put_pixel(screen, x, y, &white_pixel);
 
-            // left and right borders
-            if (x < GAME_BORDER_WIDTH) {
-                put_pixel(screen, x, y, &white_pixel);
-                put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &white_pixel);
-            }
-        }
+      // left and right borders
+      if (x < GAME_BORDER_WIDTH) {
+        put_pixel(screen, x, y, &white_pixel);
+        put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &white_pixel);
+      }
     }
+  }
 
-    SDL_UnlockSurface(screen);
+  SDL_UnlockSurface(screen);
 }
 
 /**
- * Draws a signel Pixel_t on the screen at the (x, y) position.
- */
+* Draws a signel Pixel_t on the screen at the (x, y) position.
+*/
 void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p)
 {
-    Uint32* p_screen = (Uint32*) screen->pixels;
-    p_screen += y*screen->w+x;
-    *p_screen = SDL_MapRGBA(screen->format, p->r, p->g, p->b, p->alpha);
+  Uint32* p_screen = (Uint32*) screen->pixels;
+  p_screen += y*screen->w+x;
+  *p_screen = SDL_MapRGBA(screen->format, p->r, p->g, p->b, p->alpha);
 }
 
 /**
@@ -214,29 +248,21 @@ void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p)
 * @param char *label the label of the information
 * @param int number the information itself
 */
-void print_integer_informations(SDL_Surface *screen, char *label, int number, SDL_Rect *position)
+void print_positioned_game_information(SDL_Surface *screen, char *label_text, int number, SDL_Rect *position)
 {
-    TTF_Font *label_font, *regular_font;
-    char number_text[10];
-    SDL_Color white_color  = {255, 255, 255};
-    SDL_Color fushia_color = {0, 152, 247};
-    SDL_Surface *label_surface, *number_surface;
+  char number_text[10];
+  SDL_Surface *label_surface, *number_surface;
 
-    sprintf(number_text, "%d", number);
-    regular_font = TTF_OpenFont("resources/opensans.ttf", 20);
-    label_font = TTF_OpenFont("resources/opensans.ttf", 30);
+  sprintf(number_text, "%d", number);
+  label_surface = TTF_RenderText_Blended(opensans_30_font, label_text, white_color);
+  SDL_BlitSurface(label_surface, NULL, screen, position);
 
-    label_surface = TTF_RenderText_Blended(label_font, label, white_color);
-    SDL_BlitSurface(label_surface, NULL, screen, position);
+  position->y += 40;
+  number_surface = TTF_RenderText_Blended(opensans_20_font, number_text, white_color);
+  SDL_BlitSurface(number_surface, NULL, screen, position);
 
-    position->y = position->y + 40;
-    number_surface = TTF_RenderText_Blended(regular_font, number_text, fushia_color);
-    SDL_BlitSurface(number_surface, NULL, screen, position);
-
-    TTF_CloseFont(regular_font);
-    TTF_CloseFont(label_font);
-    SDL_FreeSurface(number_surface);
-    SDL_FreeSurface(label_surface);
+  SDL_FreeSurface(number_surface);
+  SDL_FreeSurface(label_surface);
 }
 
 /*
@@ -246,5 +272,5 @@ void print_integer_informations(SDL_Surface *screen, char *label, int number, SD
 */
 void erase_surface(SDL_Surface *surface)
 {
-    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
+  SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
 }

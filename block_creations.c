@@ -13,13 +13,9 @@ int line_factors[4] = {
 	FOUR_LINES_FACTOR
 };
 
-Tetromino_t get_next_tetromino(void)
+Tetromino_t get_tetromino(int type_block)
 {
-	Tetromino_t tetromino = { .block = {{2, 2, 2, 2},
-		 {1, 1, 1, 1},
-		 {2, 2, 2, 2},
-		 {2, 2, 2, 2}}
-	 };
+	Tetromino_t tetromino;
 
 	Tetromino_t tetrominos[7] = {
 		{ .block =
@@ -65,20 +61,20 @@ Tetromino_t get_next_tetromino(void)
 		 {0, 0, 0, 0}}}
 	};
 
-	srand(time(NULL));
-	int tetromino_number = rand() % 7;
-
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++)
-			tetromino.block[i][j] = tetrominos[tetromino_number].block[i][j];
+			tetromino.block[i][j] = tetrominos[type_block].block[i][j];
 	}
 
 	return tetromino;
 }
 
-int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines)
+int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines, int *next_tetromino_type)
 {
 	Tetromino_t tetromino;
+	int current_tetromino_type = *next_tetromino_type;
+	srand(time(NULL));
+	*next_tetromino_type = rand() % 7;
 
 	for(int x = 0; x < HORIZONTAL_BLOCK_NB + 2 * EXTRA_BLOCKS; x++) {
 		for (int y = 0; y < VERTICAL_BLOCK_NB; y++) {
@@ -89,7 +85,7 @@ int next_tetromino(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICA
 	}
 
 	remove_full_lines(grid, score, level, cleared_lines);
-	tetromino = get_next_tetromino();
+	tetromino = get_tetromino(current_tetromino_type);
 
 	for(int x = (HORIZONTAL_BLOCK_NB/2); x < (HORIZONTAL_BLOCK_NB/2)+4; x++) {
 		for (int y = 0; y < 4; y++) {

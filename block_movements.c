@@ -19,7 +19,7 @@ int isDownMovable(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL
 	return 1;
 }
 
-int moveDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines)
+int moveDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int *score, int *level, int * cleared_lines, int * next_tetromino_type)
 {
 	if (isDownMovable(current_grid, grid)) {
 		for(int x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
@@ -33,11 +33,11 @@ int moveDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOC
 
 		return 1;
 	} else
-		return next_tetromino(current_grid, grid, score, level, cleared_lines);
+		return next_tetromino(current_grid, grid, score, level, cleared_lines, next_tetromino_type);
 
 }
 
-int moveFullDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines)
+int moveFullDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB], int * score, int * level, int * cleared_lines, int * next_tetromino_type)
 {
 	while (isDownMovable(current_grid, grid)) {
 		for (int x = 0; x < HORIZONTAL_BLOCK_NB + EXTRA_BLOCKS * 2; x++) {
@@ -50,7 +50,7 @@ int moveFullDown(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_
 		}
 	}
 
-	return next_tetromino(current_grid, grid, score, level, cleared_lines);
+	return next_tetromino(current_grid, grid, score, level, cleared_lines, next_tetromino_type);
 }
 
 int isLeftMovable(Block current_grid[][VERTICAL_BLOCK_NB], Block grid[][VERTICAL_BLOCK_NB])
