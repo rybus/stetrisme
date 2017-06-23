@@ -11,6 +11,7 @@
 #include "configure.h"
 #include "events.h"
 #include "play.h"
+#include "draw_game.h"
 
 Config_t config;
 int currentPosition;

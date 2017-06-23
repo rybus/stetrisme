@@ -1,10 +1,2 @@
 void play(SDL_Surface *screen);
-void print_positioned_game_information(SDL_Surface *screen, char *label, int number, SDL_Rect *position);
-void initialize_game();
-void draw_game(SDL_Surface *screen);
-void draw_game_borders(SDL_Surface *screen);
-void draw_tetrominos(SDL_Surface *screen);
-void draw_next_tetromino(SDL_Surface *screen);
-void erase_surface(SDL_Surface *screen);
-void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p);
 int get_speed(int level);
