@@ -6,3 +6,4 @@ void draw_game_borders(SDL_Surface *screen);
 void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p);
 void print_positioned_game_information(SDL_Surface *screen, char *label_text, int number, SDL_Rect *position);
 void erase_surface(SDL_Surface *surface);
+void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino);
