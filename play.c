@@ -17,11 +17,11 @@ Config_t config;
 Tetromino_t tetromino;
 Block grid[HORIZONTAL_BLOCK_NB][VERTICAL_BLOCK_NB];
 Input in;
-int score, level, current_time, previous_time, next_tetromino_type, nb_fallen_blocks;
+int score, level, current_time, previous_time, next_tetromino_type, nb_fallen_blocks, color_reversed;
 
 void play(SDL_Surface *screen)
 {
-  current_time = previous_time = nb_fallen_blocks = 0;
+  current_time = previous_time = nb_fallen_blocks = color_reversed = 0;
 
   config = load_config();
   memset(&in, 0, sizeof(in));
@@ -50,6 +50,9 @@ void play(SDL_Surface *screen)
             block_current_tetromino(grid, tetromino);
             tetromino = next_tetromino(grid, &score, &next_tetromino_type);
             nb_fallen_blocks++;
+            if (nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK == 0) {
+               color_reversed = !color_reversed;
+            }
             if (!can_be_placed(grid, tetromino)) {
                 in.key[SDLK_ESCAPE] = 1;
                 continue;
@@ -74,6 +77,9 @@ void play(SDL_Surface *screen)
       block_current_tetromino(grid, tetromino);
       tetromino = next_tetromino(grid, &score, &next_tetromino_type);
       nb_fallen_blocks++;
+      if (nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK == 0) {
+         color_reversed = !color_reversed;
+      }
       if (!can_be_placed(grid, tetromino)) {
           in.key[SDLK_ESCAPE] = 1;
           continue;
@@ -96,7 +102,7 @@ void play(SDL_Surface *screen)
       save_config(config);
     }
 
-    draw_game(screen, grid, tetromino, next_tetromino_type, config, score, level, nb_fallen_blocks);
+    draw_game(screen, grid, tetromino, next_tetromino_type, config, score, level, color_reversed);
   }
 }
 

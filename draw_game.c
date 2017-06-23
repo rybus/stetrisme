@@ -76,7 +76,7 @@ void draw_game(SDL_Surface *screen,
               Config_t config,
               int score,
               int level,
-              int nb_fallen_blocks
+              int color_reversed
 ) {
   SDL_Rect position;
   char score_label_text[6]          = "score";
@@ -96,14 +96,14 @@ void draw_game(SDL_Surface *screen,
   print_positioned_game_information(screen, current_level_label_text, level, &position);
 
 
-  draw_ghost_tetromino(screen, grid, tetromino, nb_fallen_blocks);
-  draw_tetrominos(screen, grid, tetromino, nb_fallen_blocks);
+  draw_ghost_tetromino(screen, grid, tetromino, color_reversed);
+  draw_tetrominos(screen, grid, tetromino, color_reversed);
   draw_next_tetromino(screen, next_tetromino_type);
 
   SDL_Flip(screen);
 }
 
-void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int nb_fallen_blocks)
+void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int color_reversed)
 {
     SDL_Rect position;
     while (can_move_down(grid, tetromino)) {
@@ -116,7 +116,7 @@ void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], 
         position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
         if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK) {
-          if (nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK)
+          if (color_reversed)
             SDL_BlitSurface(a_ghost_block, NULL, screen, &position);
           else
             SDL_BlitSurface(b_ghost_block, NULL, screen, &position);
@@ -125,7 +125,7 @@ void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], 
     }
 }
 
-void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int nb_fallen_blocks)
+void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int color_reversed)
 {
   SDL_Rect position;
   for (int x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
@@ -134,7 +134,7 @@ void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetro
       position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
       if (grid[x][y] == FIXED_BLOCK) {
-          if(nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK)
+          if(color_reversed)
             SDL_BlitSurface(b_block, NULL, screen, &position);
           else
             SDL_BlitSurface(a_block, NULL, screen, &position);
@@ -148,7 +148,7 @@ void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetro
       position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
       if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK) {
-          if (nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK)
+          if (color_reversed)
             SDL_BlitSurface(a_block, NULL, screen, &position);
           else
             SDL_BlitSurface(b_block, NULL, screen, &position);
