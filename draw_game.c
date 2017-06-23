@@ -12,7 +12,7 @@
 #include "tetromino.h"
 #include "grid.h"
 
-SDL_Surface *a_block, *b_block, *ghost_block, *background;
+SDL_Surface *a_block, *b_block, *a_ghost_block, *b_ghost_block, *background;
 TTF_Font *opensans_30_font, *opensans_20_font;
 SDL_Color white_color  = {255, 255, 255};
 
@@ -46,11 +46,22 @@ int initialize_color_blocks(Config_t config)
       )
     );
 
-    ghost_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
-    SDL_FillRect(ghost_block,
+    a_ghost_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+    SDL_FillRect(a_ghost_block,
       NULL,
       SDL_MapRGB(
-        ghost_block->format,
+        a_ghost_block->format,
+        (int) (config.left_eye_color.r * 0.6),
+        (int) (config.left_eye_color.g * 0.6),
+        (int) (config.left_eye_color.b * 0.6)
+      )
+    );
+
+    b_ghost_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
+    SDL_FillRect(b_ghost_block,
+      NULL,
+      SDL_MapRGB(
+        b_ghost_block->format,
         (int) (config.right_eye_color.r * 0.6),
         (int) (config.right_eye_color.g * 0.6),
         (int) (config.right_eye_color.b * 0.6)
@@ -58,8 +69,15 @@ int initialize_color_blocks(Config_t config)
     );
 }
 
-void draw_game(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int next_tetromino_type, Config_t config, int score, int level)
-{
+void draw_game(SDL_Surface *screen,
+              Block grid[][VERTICAL_BLOCK_NB],
+              Tetromino_t tetromino,
+              int next_tetromino_type,
+              Config_t config,
+              int score,
+              int level,
+              int nb_fallen_blocks
+) {
   SDL_Rect position;
   char score_label_text[6]          = "score";
   char maximum_score_label_text[11] = "max. score";
@@ -78,14 +96,14 @@ void draw_game(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t
   print_positioned_game_information(screen, current_level_label_text, level, &position);
 
 
-  draw_ghost_tetromino(screen, grid, tetromino);
-  draw_tetrominos(screen, grid, tetromino);
+  draw_ghost_tetromino(screen, grid, tetromino, nb_fallen_blocks);
+  draw_tetrominos(screen, grid, tetromino, nb_fallen_blocks);
   draw_next_tetromino(screen, next_tetromino_type);
 
   SDL_Flip(screen);
 }
 
-void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino)
+void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int nb_fallen_blocks)
 {
     SDL_Rect position;
     while (can_move_down(grid, tetromino)) {
@@ -97,13 +115,17 @@ void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], 
         position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
         position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-        if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK)
-          SDL_BlitSurface(ghost_block, NULL, screen, &position);
+        if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK) {
+          if (nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK)
+            SDL_BlitSurface(a_ghost_block, NULL, screen, &position);
+          else
+            SDL_BlitSurface(b_ghost_block, NULL, screen, &position);
+        }
       }
     }
 }
 
-void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino)
+void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int nb_fallen_blocks)
 {
   SDL_Rect position;
   for (int x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
@@ -111,8 +133,12 @@ void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetro
       position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
       position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-      if (grid[x][y] == FIXED_BLOCK)
-        SDL_BlitSurface(a_block, NULL, screen, &position);
+      if (grid[x][y] == FIXED_BLOCK) {
+          if(nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK)
+            SDL_BlitSurface(b_block, NULL, screen, &position);
+          else
+            SDL_BlitSurface(a_block, NULL, screen, &position);
+      }
     }
   }
 
@@ -121,8 +147,12 @@ void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetro
       position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
       position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-      if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK)
-        SDL_BlitSurface(b_block, NULL, screen, &position);
+      if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK) {
+          if (nb_fallen_blocks % COLOR_SWITCH_NB_FALLEN_BLOCK)
+            SDL_BlitSurface(a_block, NULL, screen, &position);
+          else
+            SDL_BlitSurface(b_block, NULL, screen, &position);
+      }
     }
   }
 }

@@ -2,6 +2,7 @@
 
 #ifndef DEF_CONSTANTS
 #define DEF_CONSTANTS
+    #define COLOR_SWITCH_NB_FALLEN_BLOCK 10
     #define BLOCK_SIZE          30
     #define HORIZONTAL_BLOCK_NB 10
     #define VERTICAL_BLOCK_NB   22
