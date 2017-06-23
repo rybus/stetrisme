@@ -113,7 +113,7 @@ void draw_next_tetromino(SDL_Surface *screen, int next_tetromino_type)
     for (int y = 0; y < 4; y++) {
       position.x = GAME_AREA_WIDTH + 10;
       for (int x = 0; x < 4; x++) {
-        if (nextTromino.block[x][y] == 1)
+        if (nextTromino.block[x][y] == CURRENT_BLOCK)
             SDL_BlitSurface(a_block, NULL, screen, &position);
         position.x += BLOCK_SIZE;
       }
