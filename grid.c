@@ -97,7 +97,7 @@ int can_be_placed(Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino)
 			if (grid[x][y] == FIXED_BLOCK)
 			  	return 0;
 		  }
-	    }
+	  }
 	}
 
 	return 1;
