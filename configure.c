@@ -43,26 +43,32 @@ void configure(SDL_Surface *screen)
     while(!in.key[SDLK_ESCAPE])
     {
         UpdateEvents(&in);
-        if (in.key[SDLK_LEFT]) {
-            if (currentPosition > 0) {
+        if (in.key[SDLK_LEFT])
+        {
+            if (currentPosition > 0)
+            {
                 currentPosition--;
             }
             in.key[SDLK_LEFT] = 0;
         }
-        if (in.key[SDLK_RIGHT]) {
-            if (currentPosition < 6) {
+        if (in.key[SDLK_RIGHT])
+        {
+            if (currentPosition < 6)
+            {
                 currentPosition++;
             }
             in.key[SDLK_RIGHT] = 0;
         }
-        if (in.key[SDLK_UP]) {
+        if (in.key[SDLK_UP])
+        {
             if (*selectors[currentPosition] == 255)
                 *selectors[currentPosition] = 0;
             else
                 (*selectors[currentPosition])++;
             in.key[SDLK_UP] = 0;
         }
-        if (in.key[SDLK_DOWN]) {
+        if (in.key[SDLK_DOWN])
+        {
             if (*selectors[currentPosition] == 0)
                 *selectors[currentPosition] = 255;
             else
@@ -105,15 +111,15 @@ void draw_color_selector(SDL_Surface *screen)
     position.y = 100;
 
     left_eye_color = TTF_RenderText_Blended(
-        font,
-        left_eye_color_txt,
-        white_color
-    );
+                         font,
+                         left_eye_color_txt,
+                         white_color
+                     );
     right_eye_color = TTF_RenderText_Blended(
-        font,
-        right_eye_color_txt,
-        white_color
-    );
+                          font,
+                          right_eye_color_txt,
+                          white_color
+                      );
     position.x = 100;
     position.y = 200;
 

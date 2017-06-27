@@ -23,12 +23,14 @@ int menu(SDL_Surface *screen)
         UpdateEvents(&in);
         print_menu(screen, selected_option);
 
-        if (in.key[SDLK_DOWN] || in.key[SDLK_UP]) {
+        if (in.key[SDLK_DOWN] || in.key[SDLK_UP])
+        {
             selected_option = !selected_option;
             in.key[SDLK_DOWN] = in.key[SDLK_UP] = 0;
         }
 
-        if (in.key[SDLK_RETURN]) {
+        if (in.key[SDLK_RETURN])
+        {
             if (selected_option == PLAY_OPTION)
                 play(screen);
             else
@@ -92,11 +94,14 @@ void print_selected_option(int selected_option, SDL_Surface *screen, SDL_Surface
     SDL_Rect position;
     position.x = 130;
     position.y = 255;
-    if (selected_option == PLAY_OPTION) {
+    if (selected_option == PLAY_OPTION)
+    {
         SDL_BlitSurface(black_block, NULL, screen, &position);
         position.y = 205;
         SDL_BlitSurface(right_arrow, NULL, screen, &position);
-    } else {
+    }
+    else
+    {
         SDL_BlitSurface(right_arrow, NULL, screen, &position);
         position.y = 205;
         SDL_BlitSurface(black_block, NULL, screen, &position);

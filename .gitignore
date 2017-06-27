@@ -1,4 +1,5 @@
 *.o
+config.txt
 stetrisme
 ignored_resources
 Stetrisme.cbp
