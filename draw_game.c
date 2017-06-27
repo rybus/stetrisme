@@ -26,135 +26,150 @@ int initialize_color_blocks(Config_t config)
 
     a_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
     SDL_FillRect(a_block,
-      NULL,
-      SDL_MapRGB(
-        a_block->format,
-        config.left_eye_color.r,
-        config.left_eye_color.g,
-        config.left_eye_color.b
-      )
-    );
+                 NULL,
+                 SDL_MapRGB(
+                     a_block->format,
+                     config.left_eye_color.r,
+                     config.left_eye_color.g,
+                     config.left_eye_color.b
+                 )
+                );
 
     b_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
     SDL_FillRect(b_block,
-      NULL,
-      SDL_MapRGB(
-        b_block->format,
-        config.right_eye_color.r,
-        config.right_eye_color.g,
-        config.right_eye_color.b
-      )
-    );
+                 NULL,
+                 SDL_MapRGB(
+                     b_block->format,
+                     config.right_eye_color.r,
+                     config.right_eye_color.g,
+                     config.right_eye_color.b
+                 )
+                );
 
     a_ghost_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
     SDL_FillRect(a_ghost_block,
-      NULL,
-      SDL_MapRGB(
-        a_ghost_block->format,
-        (int) (config.left_eye_color.r * 0.6),
-        (int) (config.left_eye_color.g * 0.6),
-        (int) (config.left_eye_color.b * 0.6)
-      )
-    );
+                 NULL,
+                 SDL_MapRGB(
+                     a_ghost_block->format,
+                     (int) (config.left_eye_color.r * 0.6),
+                     (int) (config.left_eye_color.g * 0.6),
+                     (int) (config.left_eye_color.b * 0.6)
+                 )
+                );
 
     b_ghost_block = SDL_CreateRGBSurface(0, BLOCK_SIZE, BLOCK_SIZE, 32, 0, 0, 0, 0);
     SDL_FillRect(b_ghost_block,
-      NULL,
-      SDL_MapRGB(
-        b_ghost_block->format,
-        (int) (config.right_eye_color.r * 0.6),
-        (int) (config.right_eye_color.g * 0.6),
-        (int) (config.right_eye_color.b * 0.6)
-      )
-    );
+                 NULL,
+                 SDL_MapRGB(
+                     b_ghost_block->format,
+                     (int) (config.right_eye_color.r * 0.6),
+                     (int) (config.right_eye_color.g * 0.6),
+                     (int) (config.right_eye_color.b * 0.6)
+                 )
+                );
 }
 
-void draw_game(SDL_Surface *screen,
-              Block grid[][VERTICAL_BLOCK_NB],
-              Tetromino_t tetromino,
-              int next_tetromino_type,
-              Config_t config,
-              int score,
-              int level,
-              int color_reversed
+void draw_game(
+    SDL_Surface *screen,
+    Block grid[][VERTICAL_BLOCK_NB],
+    Tetromino_t tetromino,
+    int next_tetromino_type,
+    Config_t config,
+    int score,
+    int level,
+    int color_reversed
 ) {
-  SDL_Rect position;
-  char score_label_text[6]          = "score";
-  char maximum_score_label_text[11] = "max. score";
-  char current_level_label_text[6]  = "level";
+    SDL_Rect position;
+    char score_label_text[6]          = "score";
+    char maximum_score_label_text[11] = "max. score";
+    char current_level_label_text[6]  = "level";
 
-  erase_surface(screen);
-  draw_game_borders(screen);
+    erase_surface(screen);
+    draw_game_borders(screen);
 
-  position.x = GAME_AREA_WIDTH + 10;
-  position.y = 70;
-  print_positioned_game_information(screen, score_label_text, score, &position);
+    position.x = GAME_AREA_WIDTH + 10;
+    position.y = 70;
+    print_positioned_game_information(screen, score_label_text, score, &position);
 
-  position.y += 80;
-  print_positioned_game_information(screen, maximum_score_label_text, config.high_score, &position);
-  position.y += 80;
-  print_positioned_game_information(screen, current_level_label_text, level, &position);
+    position.y += 80;
+    print_positioned_game_information(screen, maximum_score_label_text, config.high_score, &position);
+    position.y += 80;
+    print_positioned_game_information(screen, current_level_label_text, level, &position);
 
 
-  draw_ghost_tetromino(screen, grid, tetromino, color_reversed);
-  draw_tetrominos(screen, grid, tetromino, color_reversed);
-  draw_next_tetromino(screen, next_tetromino_type);
+    draw_ghost_tetromino(screen, grid, tetromino, color_reversed);
+    draw_tetrominos(screen, grid, tetromino, color_reversed);
+    draw_next_tetromino(screen, next_tetromino_type);
 
-  SDL_Flip(screen);
+    SDL_Flip(screen);
 }
 
-void draw_ghost_tetromino(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int color_reversed)
-{
+void draw_ghost_tetromino(
+    SDL_Surface *screen,
+    Block grid[][VERTICAL_BLOCK_NB],
+    Tetromino_t tetromino,
+    int color_reversed
+) {
     SDL_Rect position;
-    while (can_move_down(grid, tetromino)) {
-      move_down(&tetromino);
+    while (can_move_down(grid, tetromino))
+    {
+        move_down(&tetromino);
     }
 
-    for (int x = tetromino.pos.x; x < tetromino.pos.x + TETROMINO_LENGTH; x++) {
-       for (int y = tetromino.pos.y; y < tetromino.pos.y + TETROMINO_LENGTH; y++) {
-        position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
-        position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
+    for (int x = tetromino.pos.x; x < tetromino.pos.x + TETROMINO_LENGTH; x++)
+    {
+        for (int y = tetromino.pos.y; y < tetromino.pos.y + TETROMINO_LENGTH; y++)
+        {
+            position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
+            position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-        if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK) {
-          if (color_reversed)
-            SDL_BlitSurface(a_ghost_block, NULL, screen, &position);
-          else
-            SDL_BlitSurface(b_ghost_block, NULL, screen, &position);
+            if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK)
+            {
+                if (color_reversed)
+                    SDL_BlitSurface(a_ghost_block, NULL, screen, &position);
+                else
+                    SDL_BlitSurface(b_ghost_block, NULL, screen, &position);
+            }
         }
-      }
     }
 }
 
 void draw_tetrominos(SDL_Surface *screen, Block grid[][VERTICAL_BLOCK_NB], Tetromino_t tetromino, int color_reversed)
 {
-  SDL_Rect position;
-  for (int x = 0; x < HORIZONTAL_BLOCK_NB; x++) {
-    for (int y = 2; y < VERTICAL_BLOCK_NB; y++) {
-      position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
-      position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
+    SDL_Rect position;
+    for (int x = 0; x < HORIZONTAL_BLOCK_NB; x++)
+    {
+        for (int y = 2; y < VERTICAL_BLOCK_NB; y++)
+        {
+            position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
+            position.y = y * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-      if (grid[x][y] == FIXED_BLOCK) {
-          if(color_reversed)
-            SDL_BlitSurface(b_block, NULL, screen, &position);
-          else
-            SDL_BlitSurface(a_block, NULL, screen, &position);
-      }
+            if (grid[x][y] == FIXED_BLOCK)
+            {
+                if(color_reversed)
+                    SDL_BlitSurface(b_block, NULL, screen, &position);
+                else
+                    SDL_BlitSurface(a_block, NULL, screen, &position);
+            }
+        }
     }
-  }
 
-  for (int x = tetromino.pos.x; x < tetromino.pos.x + TETROMINO_LENGTH; x++) {
-     for (int y = tetromino.pos.y; y < tetromino.pos.y + TETROMINO_LENGTH; y++) {
-      position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
-      position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
+    for (int x = tetromino.pos.x; x < tetromino.pos.x + TETROMINO_LENGTH; x++)
+    {
+        for (int y = tetromino.pos.y; y < tetromino.pos.y + TETROMINO_LENGTH; y++)
+        {
+            position.x = x * BLOCK_SIZE + GAME_BORDER_WIDTH;
+            position.y = (y - 2) * BLOCK_SIZE + GAME_BORDER_WIDTH;
 
-      if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK) {
-          if (color_reversed)
-            SDL_BlitSurface(a_block, NULL, screen, &position);
-          else
-            SDL_BlitSurface(b_block, NULL, screen, &position);
-      }
+            if (tetromino.block[x - tetromino.pos.x][y - tetromino.pos.y] == CURRENT_BLOCK)
+            {
+                if (color_reversed)
+                    SDL_BlitSurface(a_block, NULL, screen, &position);
+                else
+                    SDL_BlitSurface(b_block, NULL, screen, &position);
+            }
+        }
     }
-  }
 }
 
 void draw_next_tetromino(SDL_Surface *screen, int next_tetromino_type)
@@ -170,14 +185,16 @@ void draw_next_tetromino(SDL_Surface *screen, int next_tetromino_type)
     SDL_BlitSurface(next_tetromino_text_surface, NULL, screen, &position);
     position.y += 50;
 
-    for (int y = 0; y < 4; y++) {
-      position.x = GAME_AREA_WIDTH + 10;
-      for (int x = 0; x < 4; x++) {
-        if (nextTromino.block[x][y] == CURRENT_BLOCK)
-            SDL_BlitSurface(a_block, NULL, screen, &position);
-        position.x += BLOCK_SIZE;
-      }
-      position.y += BLOCK_SIZE;
+    for (int y = 0; y < 4; y++)
+    {
+        position.x = GAME_AREA_WIDTH + 10;
+        for (int x = 0; x < 4; x++)
+        {
+            if (nextTromino.block[x][y] == CURRENT_BLOCK)
+                SDL_BlitSurface(a_block, NULL, screen, &position);
+            position.x += BLOCK_SIZE;
+        }
+        position.y += BLOCK_SIZE;
     }
 
     SDL_FreeSurface(next_tetromino_text_surface);
@@ -185,27 +202,30 @@ void draw_next_tetromino(SDL_Surface *screen, int next_tetromino_type)
 
 void draw_game_borders(SDL_Surface *screen)
 {
-  Pixel_t white_pixel;
-  white_pixel.r = white_pixel.g = white_pixel.b = (Uint8) 0xff;
-  white_pixel.alpha = (Uint8) 128;
+    Pixel_t white_pixel;
+    white_pixel.r = white_pixel.g = white_pixel.b = (Uint8) 0xff;
+    white_pixel.alpha = (Uint8) 128;
 
-  SDL_LockSurface(screen);
+    SDL_LockSurface(screen);
 
-  for (int y = 0; y < WINDOW_HEIGHT; y++) {
-    for (int x = 0; x < WINDOW_WIDTH; x++) {
-      // bottom border
-      if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH)
-        put_pixel(screen, x, y, &white_pixel);
+    for (int y = 0; y < WINDOW_HEIGHT; y++)
+    {
+        for (int x = 0; x < WINDOW_WIDTH; x++)
+        {
+            // bottom border
+            if (y > WINDOW_HEIGHT - GAME_BORDER_WIDTH*2 && x < GAME_AREA_WIDTH)
+                put_pixel(screen, x, y, &white_pixel);
 
-      // left and right borders
-      if (x < GAME_BORDER_WIDTH) {
-        put_pixel(screen, x, y, &white_pixel);
-        put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &white_pixel);
-      }
+            // left and right borders
+            if (x < GAME_BORDER_WIDTH)
+            {
+                put_pixel(screen, x, y, &white_pixel);
+                put_pixel(screen, GAME_AREA_WIDTH - GAME_BORDER_WIDTH + x, y, &white_pixel);
+            }
+        }
     }
-  }
 
-  SDL_UnlockSurface(screen);
+    SDL_UnlockSurface(screen);
 }
 
 /**
@@ -213,9 +233,9 @@ void draw_game_borders(SDL_Surface *screen)
 */
 void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p)
 {
-  Uint32* p_screen = (Uint32*) screen->pixels;
-  p_screen += y*screen->w+x;
-  *p_screen = SDL_MapRGBA(screen->format, p->r, p->g, p->b, p->alpha);
+    Uint32* p_screen = (Uint32*) screen->pixels;
+    p_screen += y*screen->w+x;
+    *p_screen = SDL_MapRGBA(screen->format, p->r, p->g, p->b, p->alpha);
 }
 
 /**
@@ -227,19 +247,19 @@ void put_pixel(SDL_Surface* screen, int x, int y, Pixel_t* p)
 */
 void print_positioned_game_information(SDL_Surface *screen, char *label_text, int number, SDL_Rect *position)
 {
-  char number_text[10];
-  SDL_Surface *label_surface, *number_surface;
+    char number_text[10];
+    SDL_Surface *label_surface, *number_surface;
 
-  sprintf(number_text, "%d", number);
-  label_surface = TTF_RenderText_Blended(opensans_30_font, label_text, white_color);
-  SDL_BlitSurface(label_surface, NULL, screen, position);
+    sprintf(number_text, "%d", number);
+    label_surface = TTF_RenderText_Blended(opensans_30_font, label_text, white_color);
+    SDL_BlitSurface(label_surface, NULL, screen, position);
 
-  position->y += 40;
-  number_surface = TTF_RenderText_Blended(opensans_20_font, number_text, white_color);
-  SDL_BlitSurface(number_surface, NULL, screen, position);
+    position->y += 40;
+    number_surface = TTF_RenderText_Blended(opensans_20_font, number_text, white_color);
+    SDL_BlitSurface(number_surface, NULL, screen, position);
 
-  SDL_FreeSurface(number_surface);
-  SDL_FreeSurface(label_surface);
+    SDL_FreeSurface(number_surface);
+    SDL_FreeSurface(label_surface);
 }
 
 /*
@@ -249,5 +269,5 @@ void print_positioned_game_information(SDL_Surface *screen, char *label_text, in
 */
 void erase_surface(SDL_Surface *surface)
 {
-  SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
+    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
 }
