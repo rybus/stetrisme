@@ -1,3 +1,3 @@
-max_score 200
-left_eye_color 65;0;0
-right_eye_color 0;0;56
+max_score 9800
+left_eye_color 108;0;0
+right_eye_color 0;0;96
