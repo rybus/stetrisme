@@ -5,7 +5,6 @@
 #include <SDL/SDL_ttf.h>
 #include <string.h>
 #include <errno.h>
-#include <libconfig.h>
 
 #include "constants.h"
 #include "draw_game.h"
